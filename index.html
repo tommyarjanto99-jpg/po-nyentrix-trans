@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PO NYENTRIX TRANS - Manajemen Armada</title>
-    <!-- Font Google Inter, Great Vibes (Script Font) & Cinzel/Bebas Neue -->
+    <!-- Font Google Inter, Great Vibes (Script Font) & Cinzel -->
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600;700;800&family=Cinzel:wght@800;900&display=swap" rel="stylesheet">
     <style>
         /* Import LHF Convecta Font / Fallback Style */
@@ -55,7 +55,7 @@
             padding: 1rem 1rem;
         }
 
-        /* DASHBOARD MENU CAPSULE STYLE (DITAROH PALING ATAS) */
+        /* DASHBOARD MENU CAPSULE STYLE (TERATAS) */
         .dashboard-nav {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -123,7 +123,7 @@
         .nav-card .info .title { font-size: 0.95rem; font-weight: 700; color: var(--text); }
         .nav-card .info .subtitle { font-size: 0.75rem; color: var(--text-muted); }
 
-        /* HEADER / BANNER BIRU */
+        /* HEADER BANNER */
         header {
             background: linear-gradient(135deg, #1e3a8a, #2563eb);
             color: white;
@@ -135,7 +135,6 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Font LHF Convecta Style untuk judul */
         header h2 {
             margin: 0;
             font-family: 'LHF Convecta', 'Cinzel', 'Georgia', serif;
@@ -146,7 +145,6 @@
             text-shadow: 2px 3px 6px rgba(0, 0, 0, 0.4);
         }
 
-        /* Font Script untuk Slogan Service Is Our Priority */
         header p.slogan {
             margin: 6px 0 0 0;
             font-family: 'Great Vibes', 'Brush Script MT', cursive;
@@ -317,6 +315,25 @@
             font-size: 0.95rem;
         }
 
+        .btn-delete {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-delete:hover {
+            background: #b91c1c;
+        }
+
         .admin-panel {
             background: var(--admin-bg);
             border: 1px solid var(--admin-border);
@@ -454,7 +471,7 @@
 
             <div id="admin-only-notice" class="card">
                 <p style="text-align: center; color: #dc2626; font-weight: 600; margin: 0;">
-                    ⚠️ Silakan Login Admin terlebih dahulu di atas untuk menginput jadwal atau mengubah nama armada.
+                    ⚠️ Silakan Login Admin terlebih dahulu di atas untuk menginput jadwal, menghapus order, atau mengubah nama armada.
                 </p>
             </div>
 
@@ -655,6 +672,7 @@
                 document.getElementById('form-foto-admin').classList.remove('hidden');
                 
                 renderCalendar();
+                renderOrder();
                 alert('Berhasil Login sebagai Admin!');
             } else {
                 alert('Password Salah!');
@@ -673,6 +691,7 @@
             document.getElementById('form-foto-admin').classList.add('hidden');
             
             renderCalendar();
+            renderOrder();
             alert('Berhasil Logout.');
         }
 
@@ -793,13 +812,19 @@
         }
 
         function hapusOrder(id) {
+            if(!isAdmin) {
+                alert('Hanya Admin yang diizinkan untuk menghapus jadwal.');
+                return;
+            }
             if(confirm('Yakin ingin menghapus jadwal ini?')) {
                 orders = orders.filter(o => o.id !== id);
                 localStorage.setItem('nyentrix_orders', JSON.stringify(orders));
                 renderCalendar();
+                renderOrder();
             }
         }
 
+        /* DETAIL ORDER DENGAN OPSI HAPUS JADWAL KHUSUS ADMIN */
         function renderOrder() {
             let filter = document.getElementById('filter-armada').value;
             let container = document.getElementById('list-order-detail');
@@ -818,6 +843,10 @@
                 let idx = ord.armadaIndex || 0;
                 let namaArmada = armadaList[idx] || `Armada ${parseInt(idx)+1}`;
 
+                let deleteBtnHtml = isAdmin 
+                    ? `<button class="btn-delete" onclick="hapusOrder(${ord.id})">🗑️ Hapus Jadwal</button>` 
+                    : '';
+
                 div.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                         <span class="badge armada-${idx % 4}">${namaArmada}</span>
@@ -830,6 +859,7 @@
                         <li><b>Nilai Sewa:</b> Rp ${Number(ord.harga).toLocaleString()}</li>
                         <li><b>Lain-lain:</b> ${ord.catatan || '-'}</li>
                     </ul>
+                    ${deleteBtnHtml}
                 `;
                 container.appendChild(div);
             });
