@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PO NYENTRIX TRANS - Manajemen Armada</title>
-    <!-- Font Google Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Google Inter, Great Vibes (Script Font) & Cinzel/Bebas Neue -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600;700;800&family=Cinzel:wght@800;900&display=swap" rel="stylesheet">
     <style>
+        /* Import LHF Convecta Font / Fallback Style */
+        @font-face {
+            font-family: 'LHF Convecta';
+            src: local('LHF Convecta Base'), local('LHF Convecta'), local('Cinzel-Black');
+        }
+
         :root {
             --primary: #2563eb;
             --secondary: #1d4ed8;
@@ -43,61 +49,20 @@
             transition: all 0.3s ease;
         }
 
-        header {
-            background: linear-gradient(135deg, #1e3a8a, #2563eb);
-            color: white;
-            padding: 2rem 1rem 3.5rem 1rem;
-            text-align: center;
-            position: relative;
-            border-bottom-left-radius: 28px;
-            border-bottom-right-radius: 28px;
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.15);
-        }
-
-        header h2 {
-            margin: 0;
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-
-        header p {
-            margin: 6px 0 0 0;
-            opacity: 0.9;
-            font-size: 0.95rem;
-            font-weight: 400;
-        }
-
-        .theme-toggle {
-            position: absolute;
-            top: 1.2rem;
-            right: 1.2rem;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            backdrop-filter: blur(8px);
-        }
-
         .container {
             max-width: 900px;
-            margin: -2rem auto 2rem auto;
-            padding: 0 1rem;
+            margin: 0 auto 2rem auto;
+            padding: 1rem 1rem;
         }
 
-        /* DASHBOARD MENU CAPSULE STYLE */
+        /* DASHBOARD MENU CAPSULE STYLE (DITAROH PALING ATAS) */
         .dashboard-nav {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 10;
         }
 
         @media (max-width: 600px) {
@@ -158,6 +123,58 @@
         .nav-card .info .title { font-size: 0.95rem; font-weight: 700; color: var(--text); }
         .nav-card .info .subtitle { font-size: 0.75rem; color: var(--text-muted); }
 
+        /* HEADER / BANNER BIRU */
+        header {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: white;
+            padding: 2.2rem 1.2rem;
+            text-align: center;
+            position: relative;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Font LHF Convecta Style untuk judul */
+        header h2 {
+            margin: 0;
+            font-family: 'LHF Convecta', 'Cinzel', 'Georgia', serif;
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 2px 3px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Font Script untuk Slogan Service Is Our Priority */
+        header p.slogan {
+            margin: 6px 0 0 0;
+            font-family: 'Great Vibes', 'Brush Script MT', cursive;
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: #fef08a;
+            letter-spacing: 1px;
+            text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(8px);
+        }
+
         .card {
             background: var(--card);
             border-radius: 16px;
@@ -167,7 +184,7 @@
             border: 1px solid var(--border);
         }
 
-        /* STYLE STYLISH KALENDER KALENDER BULANAN */
+        /* KALENDER GRID STYLE */
         .calendar-header {
             display: flex;
             justify-content: space-between;
@@ -340,18 +357,9 @@
 </head>
 <body>
 
-    <header>
-        <h2>PO NYENTRIX TRANS</h2>
-        <p>Sistem Manajemen Jadwal & Armada Wisata</p>
-        
-        <button id="themeToggle" class="theme-toggle" onclick="toggleDarkMode()">
-            <span id="themeIcon">🌙</span> <span id="themeText">Dark</span>
-        </button>
-    </header>
-
     <div class="container">
 
-        <!-- DASHBOARD MENU CAPSULE STYLE -->
+        <!-- MENU NAVIGASI KAPUSUL TERATAS (DI ATAS HEADER) -->
         <div class="dashboard-nav">
             <div class="nav-card card-menu-1 active" onclick="switchTab('jadwal', this)">
                 <div class="icon-circle">01</div>
@@ -386,8 +394,16 @@
             </div>
         </div>
 
-        
-        <!-- MENU 1: LIHAT JADWAL (TAMPILAN KALENDER ALA GAMBAR) -->
+        <!-- HEADER BANNER PO NYENTRIX TRANS -->
+        <header>
+            <button id="themeToggle" class="theme-toggle" onclick="toggleDarkMode()">
+                <span id="themeIcon">🌙</span> <span id="themeText">Dark</span>
+            </button>
+            <h2>PO NYENTRIX TRANS</h2>
+            <p class="slogan">Service Is Our Priority</p>
+        </header>
+
+        <!-- MENU 1: LIHAT JADWAL -->
         <div id="tab-jadwal" class="tab-content">
             <div class="card">
                 <div class="calendar-header">
@@ -421,7 +437,7 @@
         <!-- MENU 2: TAMBAH JADWAL & LOGIN ADMIN -->
         <div id="tab-tambah" class="tab-content hidden">
             
-            <!-- PANEL LOGIN ADMIN (DIPINDAHKAN KE SINI) -->
+            <!-- PANEL LOGIN ADMIN -->
             <div class="card admin-panel">
                 <p id="admin-status" style="margin-top:0;">Status: <b>User (Viewer)</b></p>
                 <div id="login-section">
@@ -534,7 +550,7 @@
         let photos = JSON.parse(localStorage.getItem('nyentrix_photos')) || [];
         let isAdmin = false;
 
-        let currentDate = new Date(); // Tanggal acuan kalender
+        let currentDate = new Date();
 
         document.addEventListener("DOMContentLoaded", () => {
             const savedTheme = localStorage.getItem('nyentrix_theme');
@@ -660,7 +676,6 @@
             alert('Berhasil Logout.');
         }
 
-        /* LOGIKA KALENDER BULANAN HASIL INSPIRASI GAMBAR */
         function renderCalendar() {
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
@@ -772,7 +787,7 @@
             
             renderCalendar();
             
-            // Otomatis pindah ke Kalender
+            // Pindah ke Kalender
             const firstCard = document.querySelector('.card-menu-1');
             switchTab('jadwal', firstCard);
         }
