@@ -11,64 +11,144 @@
             --bg: #f3f4f6;
             --card: #ffffff;
             --text: #1f2937;
+            --border: #d1d5db;
+            --admin-bg: #fef3c7;
+            --admin-border: #f59e0b;
+            --nav-bg: #ffffff;
         }
+
+        /* Variabel untuk Dark Mode */
+        body.dark-mode {
+            --primary: #3b82f6;
+            --secondary: #60a5fa;
+            --bg: #111827;
+            --card: #1f2937;
+            --text: #f9fafb;
+            --border: #374151;
+            --admin-bg: #78350f;
+            --admin-border: #d97706;
+            --nav-bg: #1f2937;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
             padding: 0;
+            transition: background-color 0.3s, color 0.3s;
         }
+
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             padding: 1rem;
             text-align: center;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
         }
+
+        /* Style Tombol Dark Mode di Header */
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            backdrop-filter: blur(5px);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
         .container {
             max-width: 800px;
             margin: auto;
             padding: 1rem;
         }
+
         .nav-tabs {
             display: flex;
             justify-content: space-around;
-            background: white;
+            background: var(--nav-bg);
             padding: 0.5rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             position: sticky;
             top: 0;
             z-index: 100;
         }
+
         .nav-tabs button {
             background: none;
             border: none;
             font-size: 1rem;
             font-weight: bold;
-            color: #6b7280;
+            color: #9ca3af;
             cursor: pointer;
             padding: 0.5rem 1rem;
         }
+
         .nav-tabs button.active {
             color: var(--primary);
             border-bottom: 3px solid var(--primary);
         }
+
         .card {
             background: var(--card);
             border-radius: 8px;
             padding: 1rem;
             margin-bottom: 1rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
         }
+
         input, select, textarea {
             width: 100%;
             padding: 0.75rem;
             margin: 0.5rem 0 1rem 0;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--border);
             border-radius: 6px;
             box-sizing: border-box;
+            background-color: var(--card);
+            color: var(--text);
         }
+
+        /* Wrapper & Button Show Password */
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-wrapper input {
+            padding-right: 45px;
+            margin: 0;
+        }
+
+        .toggle-pwd-btn {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         button.btn {
             background: var(--primary);
             color: white;
@@ -79,30 +159,36 @@
             font-weight: bold;
             width: 100%;
         }
+
         button.btn:hover {
             background: var(--secondary);
         }
+
         .admin-panel {
-            background: #fef3c7;
-            border: 1px solid #f59e0b;
+            background: var(--admin-bg);
+            border: 1px solid var(--admin-border);
             padding: 1rem;
             border-radius: 8px;
             margin-bottom: 1rem;
         }
+
         .hidden { display: none; }
+
         .badge {
             background: #e0e7ff;
-            color: var(--primary);
+            color: #2563eb;
             padding: 0.25rem 0.5rem;
             border-radius: 4px;
             font-size: 0.85rem;
             font-weight: bold;
         }
+
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
         }
+
         .gallery-item img {
             width: 100%;
             height: 120px;
@@ -116,6 +202,11 @@
     <header>
         <h2>PO NYENTRIX TRANS</h2>
         <p>Sistem Manajemen Jadwal & Armada Wisata</p>
+        
+        <!-- TOMBOL DARK MODE -->
+        <button id="themeToggle" class="theme-toggle" onclick="toggleDarkMode()">
+            <span id="themeIcon">🌙</span> <span id="themeText">Dark</span>
+        </button>
     </header>
 
     <div class="nav-tabs">
@@ -133,7 +224,11 @@
                 <div class="admin-panel">
                     <p id="admin-status">Status: <b>User (Viewer)</b></p>
                     <div id="login-section">
-                        <input type="password" id="admin-pass" placeholder="Password Admin...">
+                        <!-- INPUT PASSWORD DENGAN SHOW/HIDE BUTTON -->
+                        <div class="password-wrapper" style="margin-bottom: 1rem;">
+                            <input type="password" id="admin-pass" placeholder="Password Admin...">
+                            <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility()" title="Tampilkan/Sembunyikan Password">👁️</button>
+                        </div>
                         <button class="btn" onclick="loginAdmin()">Login Admin</button>
                     </div>
                     <div id="logout-section" class="hidden">
@@ -142,27 +237,27 @@
                 </div>
 
                 <!-- Form Input Admin (Hanya muncul jika login) -->
-                <div id="form-admin-order" class="card hidden" style="background:#f0fdf4; border:1px solid #10b981;">
-                    <h4>➕ Tambah Jadwal Baru (Admin)</h4>
-                    <label>Pilih Armada:</label>
-                    <select id="input-armada">
+                <div id="form-admin-order" class="card hidden" style="background:#f0fdf4; border:1px solid #10b981; color:#1f2937;">
+                    <h4 style="color:#111827;">➕ Tambah Jadwal Baru (Admin)</h4>
+                    <label style="color:#111827;">Pilih Armada:</label>
+                    <select id="input-armada" style="background:#fff; color:#000;">
                         <option value="Armada 01 (NX-01)">Armada 01 (NX-01)</option>
                         <option value="Armada 02 (NX-02)">Armada 02 (NX-02)</option>
                         <option value="Armada 03 (NX-03)">Armada 03 (NX-03)</option>
                         <option value="Armada 04 (NX-04)">Armada 04 (NX-04)</option>
                     </select>
-                    <label>Tanggal Berangkat:</label>
-                    <input type="date" id="input-tanggal">
-                    <label>Tujuan:</label>
-                    <input type="text" id="input-tujuan" placeholder="Contoh: Bali / Yogyakarta">
-                    <label>Penjemputan:</label>
-                    <input type="text" id="input-lokasi" placeholder="Contoh: Kantor PO Nyentrix">
-                    <label>Jam Jemput:</label>
-                    <input type="time" id="input-jam">
-                    <label>Nilai Sewa (Rp):</label>
-                    <input type="number" id="input-harga" placeholder="Contoh: 3500000">
-                    <label>Lain-lain / Catatan:</label>
-                    <textarea id="input-catatan" placeholder="Fasilitas / Keterangan tambahan..."></textarea>
+                    <label style="color:#111827;">Tanggal Berangkat:</label>
+                    <input type="date" id="input-tanggal" style="background:#fff; color:#000;">
+                    <label style="color:#111827;">Tujuan:</label>
+                    <input type="text" id="input-tujuan" placeholder="Contoh: Bali / Yogyakarta" style="background:#fff; color:#000;">
+                    <label style="color:#111827;">Penjemputan:</label>
+                    <input type="text" id="input-lokasi" placeholder="Contoh: Kantor PO Nyentrix" style="background:#fff; color:#000;">
+                    <label style="color:#111827;">Jam Jemput:</label>
+                    <input type="time" id="input-jam" style="background:#fff; color:#000;">
+                    <label style="color:#111827;">Nilai Sewa (Rp):</label>
+                    <input type="number" id="input-harga" placeholder="Contoh: 3500000" style="background:#fff; color:#000;">
+                    <label style="color:#111827;">Lain-lain / Catatan:</label>
+                    <textarea id="input-catatan" placeholder="Fasilitas / Keterangan tambahan..." style="background:#fff; color:#000;"></textarea>
                     <button class="btn" onclick="simpanData()">Simpan Jadwal Order</button>
                 </div>
 
@@ -219,6 +314,43 @@
         let photos = JSON.parse(localStorage.getItem('nyentrix_photos')) || [];
         let isAdmin = false;
 
+        // --- CEK THEME SAAT PERTAMA KALI HALAMAN DILOAD ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedTheme = localStorage.getItem('nyentrix_theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('themeIcon').innerText = '☀️';
+                document.getElementById('themeText').innerText = 'Light';
+            }
+        });
+
+        // --- FITUR DARK MODE TOGGLE ---
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            
+            // Simpan status tema ke localStorage
+            localStorage.setItem('nyentrix_theme', isDark ? 'dark' : 'light');
+
+            // Ubah ikon & teks tombol
+            document.getElementById('themeIcon').innerText = isDark ? '☀️' : '🌙';
+            document.getElementById('themeText').innerText = isDark ? 'Light' : 'Dark';
+        }
+
+        // --- FITUR SHOW / HIDE PASSWORD ---
+        function togglePasswordVisibility() {
+            const passInput = document.getElementById('admin-pass');
+            const toggleBtn = document.querySelector('.toggle-pwd-btn');
+            
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                toggleBtn.innerText = '🙈';
+            } else {
+                passInput.type = 'password';
+                toggleBtn.innerText = '👁️';
+            }
+        }
+
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.nav-tabs button').forEach(el => el.classList.remove('active'));
@@ -232,7 +364,7 @@
             let pass = document.getElementById('admin-pass').value;
             if(pass === 'nyentrix123') { // Password Admin Anda
                 isAdmin = true;
-                document.getElementById('admin-status').innerHTML = 'Status: <b style="color:green;">Admin (Logged In)</b>';
+                document.getElementById('admin-status').innerHTML = 'Status: <b style="color:#10b981;">Admin (Logged In)</b>';
                 document.getElementById('login-section').classList.add('hidden');
                 document.getElementById('logout-section').classList.remove('hidden');
                 document.getElementById('form-admin-order').classList.remove('hidden');
@@ -300,7 +432,7 @@
                     <h4 style="margin: 5px 0;">📅 ${ord.tanggal} (${ord.jam || 'Jam fleksibel'})</h4>
                     <p><b>Tujuan:</b> ${ord.tujuan}</p>
                     <p><b>Penjemputan:</b> ${ord.lokasi}</p>
-                    ${isAdmin ? `<button onclick="hapusOrder(${ord.id})" style="background:red; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Hapus Jadwal</button>` : ''}
+                    ${isAdmin ? `<button onclick="hapusOrder(${ord.id})" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Hapus Jadwal</button>` : ''}
                 `;
                 container.appendChild(div);
             });
@@ -361,7 +493,7 @@
                     keterangan: ket
                 };
                 photos.push(newPhoto);
-                    localStorage.setItem('nyentrix_photos', JSON.stringify(photos));
+                localStorage.setItem('nyentrix_photos', JSON.stringify(photos));
                 alert('Foto berhasil diunggah!');
                 renderGallery();
                 document.getElementById('ket-foto').value = '';
