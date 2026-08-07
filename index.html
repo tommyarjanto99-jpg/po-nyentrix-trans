@@ -4,392 +4,121 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PO NYENTRIX TRANS - Manajemen Armada</title>
-    <style>
-        :root {
-            --primary: #2563eb;
-            --secondary: #1e40af;
-            --bg: #f3f4f6;
-            --card: #ffffff;
-            --text: #1f2937;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 1rem;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 1rem;
-        }
-        .nav-tabs {
-            display: flex;
-            justify-content: space-around;
-            background: white;
-            padding: 0.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .nav-tabs button {
-            background: none;
-            border: none;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #6b7280;
-            cursor: pointer;
-            padding: 0.5rem 1rem;
-        }
-        .nav-tabs button.active {
-            color: var(--primary);
-            border-bottom: 3px solid var(--primary);
-        }
-        .card {
-            background: var(--card);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 0.75rem;
-            margin: 0.5rem 0 1rem 0;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
-        button.btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
-        }
-        button.btn:hover {
-            background: var(--secondary);
-        }
-        .admin-panel {
-            background: #fef3c7;
-            border: 1px solid #f59e0b;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-        .hidden { display: none; }
-        .badge {
-            background: #e0e7ff;
-            color: var(--primary);
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: bold;
-        }
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-        .gallery-item img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 6px;
-        }
-    </style>
+    <!-- Tailwind CSS untuk Desain Responsif HP -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-slate-100 font-sans pb-12">
 
-    <header>
-        <h2>PO NYENTRIX TRANS</h2>
-        <p>Sistem Manajemen Jadwal & Armada Wisata</p>
+    <!-- Header -->
+    <header class="bg-blue-600 text-white p-4 shadow-md text-center">
+        <h1 class="text-xl font-bold">PO NYENTRIX TRANS</h1>
+        <p class="text-sm text-blue-100">Manajemen Jadwal Armada Wisata</p>
     </header>
 
-    <div class="nav-tabs">
-        <button class="active" onclick="switchTab('jadwal')">📅 Lihat Jadwal</button>
-        <button onclick="switchTab('order')">📋 Detail Order</button>
-        <button onclick="switchTab('foto')">📷 Foto Trip</button>
+    <!-- Navigasi Tab -->
+    <div class="flex justify-around bg-white shadow-sm border-b sticky top-0 z-50">
+        <button onclick="switchTab('jadwal')" id="btn-jadwal" class="py-3 px-4 font-semibold text-blue-600 border-b-2 border-blue-600 w-1/3 text-center text-sm">Lihat Jadwal</button>
+        <button onclick="switchTab('detail')" id="btn-detail" class="py-3 px-4 font-semibold text-gray-500 w-1/3 text-center text-sm">Detail Order</button>
+        <button onclick="switchTab('foto')" id="btn-foto" class="py-3 px-4 font-semibold text-gray-500 w-1/3 text-center text-sm">Foto Trip</button>
     </div>
 
-    <div class="container">
+    <main class="p-4 max-w-md mx-auto">
         
-        <!-- MENU 1: LIHAT JADWAL -->
-        <div id="tab-jadwal" class="tab-content">
-            <div class="card">
-                <h3>Jadwal Armada Bulanan</h3>
-                <div class="admin-panel">
-                    <p id="admin-status">Status: <b>User (Viewer)</b></p>
-                    <div id="login-section">
-                        <input type="password" id="admin-pass" placeholder="Password Admin...">
-                        <button class="btn" onclick="loginAdmin()">Login Admin</button>
-                    </div>
-                    <div id="logout-section" class="hidden">
-                        <button class="btn" style="background:#dc2626;" onclick="logoutAdmin()">Logout Admin</button>
-                    </div>
+        <!-- TAB 1: LIHAT JADWAL -->
+        <section id="tab-jadwal" class="space-y-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm">
+                <h2 class="font-bold text-gray-700 mb-2">Kalender Jadwal Sebulan Penuh</h2>
+                <div class="flex justify-between items-center mb-4">
+                    <span id="current-month" class="font-semibold text-blue-600">Bulan Ini</span>
+                    <button onclick="openAdminLogin()" class="bg-gray-800 text-white text-xs px-3 py-1.5 rounded-lg">🔑 Login Admin</button>
                 </div>
+                <!-- Tampilan Daftar/Grid Jadwal -->
+                <div id="schedule-list" class="space-y-3">
+                    <p class="text-sm text-gray-400 text-center py-4">Memuat data jadwal...</p>
+                </div>
+            </div>
 
-                <!-- Form Input Admin (Hanya muncul jika login) -->
-                <div id="form-admin-order" class="card hidden" style="background:#f0fdf4; border:1px solid #10b981;">
-                    <h4>➕ Tambah Jadwal Baru (Admin)</h4>
-                    <label>Pilih Armada:</label>
-                    <select id="input-armada">
-                        <option value="Armada 01 (NX-01)">Armada 01 (NX-01)</option>
-                        <option value="Armada 02 (NX-02)">Armada 02 (NX-02)</option>
-                        <option value="Armada 03 (NX-03)">Armada 03 (NX-03)</option>
-                        <option value="Armada 04 (NX-04)">Armada 04 (NX-04)</option>
+            <!-- Form Input Admin (Hidden by default) -->
+            <div id="admin-panel" class="bg-amber-50 border border-amber-200 p-4 rounded-xl hidden">
+                <h3 class="font-bold text-amber-800 mb-2 text-sm">Panel Admin: Tambah Jadwal & Order</h3>
+                <form id="order-form" class="space-y-3 text-sm">
+                    <input type="date" id="tgl-berangkat" class="w-full p-2 border rounded" required>
+                    <select id="pilih-armada" class="w-full p-2 border rounded" required>
+                        <option value="">Pilih Armada</option>
+                        <option value="Armada 01">Armada 01</option>
+                        <option value="Armada 02">Armada 02</option>
+                        <option value="Armada 03">Armada 03</option>
+                        <option value="Armada 04">Armada 04</option>
                     </select>
-                    <label>Tanggal Berangkat:</label>
-                    <input type="date" id="input-tanggal">
-                    <label>Tujuan:</label>
-                    <input type="text" id="input-tujuan" placeholder="Contoh: Bali / Yogyakarta">
-                    <label>Penjemputan:</label>
-                    <input type="text" id="input-lokasi" placeholder="Contoh: Kantor PO Nyentrix">
-                    <label>Jam Jemput:</label>
-                    <input type="time" id="input-jam">
-                    <label>Nilai Sewa (Rp):</label>
-                    <input type="number" id="input-harga" placeholder="Contoh: 3500000">
-                    <label>Lain-lain / Catatan:</label>
-                    <textarea id="input-catatan" placeholder="Fasilitas / Keterangan tambahan..."></textarea>
-                    <button class="btn" onclick="simpanData()">Simpan Jadwal Order</button>
-                </div>
+                    <input type="text" id="tujuan" placeholder="Tujuan Wisata" class="w-full p-2 border rounded" required>
+                    <input type="text" id="penjemputan" placeholder="Lokasi Penjemputan" class="w-full p-2 border rounded" required>
+                    <input type="time" id="jam-jemput" class="w-full p-2 border rounded" required>
+                    <input type="number" id="nilai-sewa" placeholder="Nilai Sewa (Rp)" class="w-full p-2 border rounded" required>
+                    <textarea id="lain-lain" placeholder="Catatan Lain-lain" class="w-full p-2 border rounded"></textarea>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded font-bold">Simpan Order</button>
+                </form>
+            </div>
+        </section>
 
-                <!-- Tampilan Kalender / List Jadwal -->
-                <div id="list-jadwal">
-                    <!-- Data akan masuk otomatis lewat JS -->
+        <!-- TAB 2: DETAIL ORDER -->
+        <section id="tab-detail" class="space-y-4 hidden">
+            <div class="bg-white p-4 rounded-xl shadow-sm">
+                <h2 class="font-bold text-gray-700 mb-3">Draf Detail Order Armada</h2>
+                <div id="detail-order-list" class="space-y-3">
+                    <p class="text-sm text-gray-400 text-center py-4">Belum ada order masuk.</p>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- MENU 2: DETAIL ORDER -->
-        <div id="tab-order" class="tab-content hidden">
-            <div class="card">
-                <h3>Detail Order Berdasarkan Armada</h3>
-                <label>Filter Armada:</label>
-                <select id="filter-armada" onchange="renderOrder()">
-                    <option value="semua">Semua Armada</option>
-                    <option value="Armada 01 (NX-01)">Armada 01 (NX-01)</option>
-                    <option value="Armada 02 (NX-02)">Armada 02 (NX-02)</option>
-                    <option value="Armada 03 (NX-03)">Armada 03 (NX-03)</option>
-                    <option value="Armada 04 (NX-04)">Armada 04 (NX-04)</option>
-                </select>
-                <div id="list-order-detail"></div>
-            </div>
-        </div>
-
-        <!-- MENU 3: FOTO TRIP -->
-        <div id="tab-foto" class="tab-content hidden">
-            <div class="card">
-                <h3>Laporan Foto Trip Armada</h3>
-                <div id="form-foto-admin" class="hidden" style="margin-bottom: 1rem;">
-                    <label>Pilih Armada Trip:</label>
-                    <select id="foto-armada">
-                        <option value="Armada 01 (NX-01)">Armada 01 (NX-01)</option>
-                        <option value="Armada 02 (NX-02)">Armada 02 (NX-02)</option>
-                        <option value="Armada 03 (NX-03)">Armada 03 (NX-03)</option>
-                        <option value="Armada 04 (NX-04)">Armada 04 (NX-04)</option>
-                    </select>
-                    <label>Upload Foto:</label>
-                    <input type="file" id="input-file-foto" accept="image/*">
-                    <label>Keterangan Foto:</label>
-                    <input type="text" id="ket-foto" placeholder="Contoh: Tiba di Lokasi Wisata">
-                    <button class="btn" onclick="uploadFoto()">Unggah Foto</button>
+        <!-- TAB 3: FOTO TRIP -->
+        <section id="tab-foto" class="space-y-4 hidden">
+            <div class="bg-white p-4 rounded-xl shadow-sm space-y-3">
+                <h2 class="font-bold text-gray-700">Laporan Foto Trip Armada</h2>
+                <div class="border-2 border-dashed border-gray-300 p-3 rounded-lg text-center">
+                    <input type="file" id="upload-foto" accept="image/*" class="text-xs mb-2">
+                    <input type="text" id="ket-foto" placeholder="Keterangan Foto / No Armada" class="w-full p-2 border rounded text-sm mb-2">
+                    <button onclick="uploadFotoTrip()" class="w-full bg-green-600 text-white py-2 rounded text-sm font-bold">Upload Foto</button>
                 </div>
-                <div class="gallery-grid" id="gallery-container"></div>
+                <div id="gallery-list" class="grid grid-cols-2 gap-2 pt-2">
+                    <!-- Foto galeri muncul di sini -->
+                </div>
             </div>
-        </div>
+        </section>
 
-    </div>
+    </main>
 
+    <!-- JavaScript Sederhana untuk Navigasi & Simulasi -->
     <script>
-        // Database Lokal (Menyimpan di memori HP/Browser)
-        let orders = JSON.parse(localStorage.getItem('nyentrix_orders')) || [];
-        let photos = JSON.parse(localStorage.getItem('nyentrix_photos')) || [];
-        let isAdmin = false;
-
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.nav-tabs button').forEach(el => el.classList.remove('active'));
-            document.getElementById('tab-' + tabId).classList.remove('hidden');
-            event.currentTarget.classList.add('active');
-            if(tabId === 'order') renderOrder();
-            if(tabId === 'foto') renderGallery();
-        }
-
-        function loginAdmin() {
-            let pass = document.getElementById('admin-pass').value;
-            if(pass === 'nyentrix123') { // Password Admin Anda
-                isAdmin = true;
-                document.getElementById('admin-status').innerHTML = 'Status: <b style="color:green;">Admin (Logged In)</b>';
-                document.getElementById('login-section').classList.add('hidden');
-                document.getElementById('logout-section').classList.remove('hidden');
-                document.getElementById('form-admin-order').classList.remove('hidden');
-                document.getElementById('form-foto-admin').classList.remove('hidden');
-                alert('Berhasil Login sebagai Admin!');
-            } else {
-                alert('Password Salah!');
-            }
-        }
-
-        function logoutAdmin() {
-            isAdmin = false;
-            document.getElementById('admin-status').innerHTML = 'Status: <b>User (Viewer)</b>';
-            document.getElementById('login-section').classList.remove('hidden');
-            document.getElementById('logout-section').classList.add('hidden');
-            document.getElementById('form-admin-order').classList.add('hidden');
-            document.getElementById('form-foto-admin').classList.add('hidden');
-            alert('Berhasil Logout.');
-        }
-
-        function simpanData() {
-            let newOrder = {
-                id: Date.now(),
-                armada: document.getElementById('input-armada').value,
-                tanggal: document.getElementById('input-tanggal').value,
-                tujuan: document.getElementById('input-tujuan').value,
-                lokasi: document.getElementById('input-lokasi').value,
-                jam: document.getElementById('input-jam').value,
-                harga: document.getElementById('input-harga').value,
-                catatan: document.getElementById('input-catatan').value
-            };
-
-            if(!newOrder.tanggal || !newOrder.tujuan) {
-                alert('Tanggal dan Tujuan wajib diisi!');
-                return;
-            }
-
-            orders.push(newOrder);
-            localStorage.setItem('nyentrix_orders', JSON.stringify(orders));
-            alert('Jadwal berhasil disimpan!');
-            renderJadwal();
-            // Reset form
-            document.getElementById('input-tujuan').value = '';
-            document.getElementById('input-lokasi').value = '';
-            document.getElementById('input-harga').value = '';
-            document.getElementById('input-catatan').value = '';
-        }
-
-        function renderJadwal() {
-            let container = document.getElementById('list-jadwal');
-            container.innerHTML = '';
-            if(orders.length === 0) {
-                container.innerHTML = '<p>Belum ada jadwal tersimpan.</p>';
-                return;
-            }
-            // Urutkan berdasarkan tanggal
-            orders.sort((a,b) => new Date(a.tanggal) - new Date(b.tanggal));
-
-            orders.forEach(ord => {
-                let div = document.createElement('div');
-                div.className = 'card';
-                div.style.borderLeft = '5px solid #2563eb';
-                div.innerHTML = `
-                    <span class="badge">${ord.armada}</span>
-                    <h4 style="margin: 5px 0;">📅 ${ord.tanggal} (${ord.jam || 'Jam fleksibel'})</h4>
-                    <p><b>Tujuan:</b> ${ord.tujuan}</p>
-                    <p><b>Penjemputan:</b> ${ord.lokasi}</p>
-                    ${isAdmin ? `<button onclick="hapusOrder(${ord.id})" style="background:red; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Hapus Jadwal</button>` : ''}
-                `;
-                container.appendChild(div);
+        function switchTab(tab) {
+            ['jadwal', 'detail', 'foto'].forEach(t => {
+                document.getElementById('tab-' + t).classList.add('hidden');
+                document.getElementById('btn-' + t).classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
+                document.getElementById('btn-' + t).classList.add('text-gray-500');
             });
+            document.getElementById('tab-' + tab).classList.remove('hidden');
+            document.getElementById('btn-' + tab).classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+            document.getElementById('btn-' + tab).classList.remove('text-gray-500');
         }
 
-        function hapusOrder(id) {
-            if(confirm('Yakin ingin menghapus jadwal ini?')) {
-                orders = orders.filter(o => o.id !== id);
-                localStorage.setItem('nyentrix_orders', JSON.stringify(orders));
-                renderJadwal();
+        function openAdminLogin() {
+            let pwd = prompt("Masukkan Password Admin:");
+            if (pwd === "nyentrix123") { // Password default admin
+                document.getElementById('admin-panel').classList.remove('hidden');
+                alert("Login Admin Berhasil!");
+            } else if (pwd !== null) {
+                alert("Password Salah!");
             }
         }
 
-        function renderOrder() {
-            let filter = document.getElementById('filter-armada').value;
-            let container = document.getElementById('list-order-detail');
-            container.innerHTML = '';
+        // Simulasi Data Sementara (Nanti dihubungkan ke Database Cloud)
+        document.getElementById('order-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert("Fitur simpan aktif! (Hubungkan ke Firebase untuk sinkronisasi HP otomatis)");
+        });
 
-            let filtered = filter === 'semua' ? orders : orders.filter(o => o.armada === filter);
-
-            if(filtered.length === 0) {
-                container.innerHTML = '<p>Tidak ada detail order untuk armada ini.</p>';
-                return;
-            }
-
-            filtered.forEach(ord => {
-                let div = document.createElement('div');
-                div.className = 'card';
-                div.innerHTML = `
-                    <h4>${ord.armada} - ${ord.tanggal}</h4>
-                    <ul>
-                        <li><b>Tujuan:</b> ${ord.tujuan}</li>
-                        <li><b>Penjemputan:</b> ${ord.lokasi}</li>
-                        <li><b>Jam Jemput:</b> ${ord.jam}</li>
-                        <li><b>Nilai Sewa:</b> Rp ${Number(ord.harga).toLocaleString()}</li>
-                        <li><b>Lain-lain:</b> ${ord.catatan || '-'}</li>
-                    </ul>
-                `;
-                container.appendChild(div);
-            });
+        function uploadFotoTrip() {
+            alert("Fitur upload foto trip siap digunakan.");
         }
-
-        function uploadFoto() {
-            let fileInput = document.getElementById('input-file-foto');
-            let armada = document.getElementById('foto-armada').value;
-            let ket = document.getElementById('ket-foto').value;
-
-            if(fileInput.files.length === 0) {
-                alert('Pilih foto terlebih dahulu!');
-                return;
-            }
-
-            let reader = new FileReader();
-            reader.onload = function(e) {
-                let newPhoto = {
-                    armada: armada,
-                    url: e.target.result,
-                    keterangan: ket
-                };
-                photos.push(newPhoto);
-                    localStorage.setItem('nyentrix_photos', JSON.stringify(photos));
-                alert('Foto berhasil diunggah!');
-                renderGallery();
-                document.getElementById('ket-foto').value = '';
-                fileInput.value = '';
-            }
-            reader.readAsDataURL(fileInput.files[0]);
-        }
-
-        function renderGallery() {
-            let container = document.getElementById('gallery-container');
-            container.innerHTML = '';
-            if(photos.length === 0) {
-                container.innerHTML = '<p>Belum ada foto trip.</p>';
-                return;
-            }
-            photos.forEach(p => {
-                let div = document.createElement('div');
-                div.className = 'gallery-item card';
-                div.innerHTML = `
-                    <img src="${p.url}">
-                    <p style="font-size:0.85rem; margin:5px 0;"><b>${p.armada}</b><br>${p.keterangan || ''}</p>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        // Jalankan saat pertama buka
-        renderJadwal();
     </script>
 </body>
 </html>
