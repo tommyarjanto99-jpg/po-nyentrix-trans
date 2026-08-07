@@ -48,7 +48,7 @@
             position: relative;
         }
 
-        /* Style Tombol Dark Mode di Header */
+        /* Tombol Dark Mode */
         .theme-toggle {
             position: absolute;
             top: 1rem;
@@ -86,16 +86,18 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            overflow-x: auto;
         }
 
         .nav-tabs button {
             background: none;
             border: none;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: bold;
             color: #9ca3af;
             cursor: pointer;
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 0.8rem;
+            white-space: nowrap;
         }
 
         .nav-tabs button.active {
@@ -123,7 +125,7 @@
             color: var(--text);
         }
 
-        /* Wrapper & Button Show Password */
+        /* Show Password Toggle */
         .password-wrapper {
             position: relative;
             display: flex;
@@ -144,9 +146,6 @@
             font-size: 1.2rem;
             padding: 5px;
             color: var(--text);
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         button.btn {
@@ -174,14 +173,20 @@
 
         .hidden { display: none; }
 
+        /* Style Badge Armada Berwarna */
         .badge {
-            background: #e0e7ff;
-            color: #2563eb;
-            padding: 0.25rem 0.5rem;
+            padding: 0.3rem 0.6rem;
             border-radius: 4px;
             font-size: 0.85rem;
             font-weight: bold;
+            color: white;
+            display: inline-block;
         }
+
+        .armada-0 { background-color: #2563eb; } /* Blue */
+        .armada-1 { background-color: #10b981; } /* Emerald Green */
+        .armada-2 { background-color: #8b5cf6; } /* Purple */
+        .armada-3 { background-color: #f97316; } /* Orange */
 
         .gallery-grid {
             display: grid;
@@ -211,6 +216,7 @@
 
     <div class="nav-tabs">
         <button class="active" onclick="switchTab('jadwal')">📅 Lihat Jadwal</button>
+        <button onclick="switchTab('tambah')">➕ Tambah Jadwal</button>
         <button onclick="switchTab('order')">📋 Detail Order</button>
         <button onclick="switchTab('foto')">📷 Foto Trip</button>
     </div>
@@ -224,7 +230,6 @@
                 <div class="admin-panel">
                     <p id="admin-status">Status: <b>User (Viewer)</b></p>
                     <div id="login-section">
-                        <!-- INPUT PASSWORD DENGAN SHOW/HIDE BUTTON -->
                         <div class="password-wrapper" style="margin-bottom: 1rem;">
                             <input type="password" id="admin-pass" placeholder="Password Admin...">
                             <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility()" title="Tampilkan/Sembunyikan Password">👁️</button>
@@ -236,31 +241,6 @@
                     </div>
                 </div>
 
-                <!-- Form Input Admin (Hanya muncul jika login) -->
-                <div id="form-admin-order" class="card hidden" style="background:#f0fdf4; border:1px solid #10b981; color:#1f2937;">
-                    <h4 style="color:#111827;">➕ Tambah Jadwal Baru (Admin)</h4>
-                    <label style="color:#111827;">Pilih Armada:</label>
-                    <select id="input-armada" style="background:#fff; color:#000;">
-                        <option value="Armada 01 (NX-01)">Armada 01 (NX-01)</option>
-                        <option value="Armada 02 (NX-02)">Armada 02 (NX-02)</option>
-                        <option value="Armada 03 (NX-03)">Armada 03 (NX-03)</option>
-                        <option value="Armada 04 (NX-04)">Armada 04 (NX-04)</option>
-                    </select>
-                    <label style="color:#111827;">Tanggal Berangkat:</label>
-                    <input type="date" id="input-tanggal" style="background:#fff; color:#000;">
-                    <label style="color:#111827;">Tujuan:</label>
-                    <input type="text" id="input-tujuan" placeholder="Contoh: Bali / Yogyakarta" style="background:#fff; color:#000;">
-                    <label style="color:#111827;">Penjemputan:</label>
-                    <input type="text" id="input-lokasi" placeholder="Contoh: Kantor PO Nyentrix" style="background:#fff; color:#000;">
-                    <label style="color:#111827;">Jam Jemput:</label>
-                    <input type="time" id="input-jam" style="background:#fff; color:#000;">
-                    <label style="color:#111827;">Nilai Sewa (Rp):</label>
-                    <input type="number" id="input-harga" placeholder="Contoh: 3500000" style="background:#fff; color:#000;">
-                    <label style="color:#111827;">Lain-lain / Catatan:</label>
-                    <textarea id="input-catatan" placeholder="Fasilitas / Keterangan tambahan..." style="background:#fff; color:#000;"></textarea>
-                    <button class="btn" onclick="simpanData()">Simpan Jadwal Order</button>
-                </div>
-
                 <!-- Tampilan Kalender / List Jadwal -->
                 <div id="list-jadwal">
                     <!-- Data akan masuk otomatis lewat JS -->
@@ -268,34 +248,79 @@
             </div>
         </div>
 
-        <!-- MENU 2: DETAIL ORDER -->
+        <!-- MENU 2: TAMBAH JADWAL (INPUT ADMIN) -->
+        <div id="tab-tambah" class="tab-content hidden">
+            <div id="admin-only-notice" class="card">
+                <p style="text-align: center; color: #dc2626; font-weight: bold;">⚠️ Silakan Login Admin terlebih dahulu di menu "📅 Lihat Jadwal" untuk menambahkan jadwal atau mengubah nama armada.</p>
+            </div>
+
+            <div id="form-admin-order" class="card hidden" style="background:#f0fdf4; border:1px solid #10b981; color:#1f2937;">
+                <h3 style="color:#111827; margin-top: 0;">➕ Tambah Jadwal Baru (Admin)</h3>
+                
+                <label style="color:#111827; font-weight: bold;">Pilih Armada:</label>
+                <select id="input-armada" style="background:#fff; color:#000;"></select>
+
+                <label style="color:#111827; font-weight: bold;">Tanggal Berangkat:</label>
+                <input type="date" id="input-tanggal" style="background:#fff; color:#000;">
+
+                <label style="color:#111827; font-weight: bold;">Tujuan:</label>
+                <input type="text" id="input-tujuan" placeholder="Contoh: Bali / Yogyakarta" style="background:#fff; color:#000;">
+
+                <label style="color:#111827; font-weight: bold;">Penjemputan:</label>
+                <input type="text" id="input-lokasi" placeholder="Contoh: Kantor PO Nyentrix" style="background:#fff; color:#000;">
+
+                <label style="color:#111827; font-weight: bold;">Jam Jemput:</label>
+                <input type="time" id="input-jam" style="background:#fff; color:#000;">
+
+                <label style="color:#111827; font-weight: bold;">Nilai Sewa (Rp):</label>
+                <input type="number" id="input-harga" placeholder="Contoh: 3500000" style="background:#fff; color:#000;">
+
+                <label style="color:#111827; font-weight: bold;">Lain-lain / Catatan:</label>
+                <textarea id="input-catatan" placeholder="Fasilitas / Keterangan tambahan..." style="background:#fff; color:#000;"></textarea>
+
+                <button class="btn" onclick="simpanData()">Simpan Jadwal Order</button>
+            </div>
+
+            <!-- PENGATURAN NAMA ARMADA (KHUSUS ADMIN) -->
+            <div id="form-custom-armada" class="card hidden">
+                <h3>⚙️ Pengaturan Nama Armada</h3>
+                <p style="font-size: 0.9rem; color: #6b7280;">Ubah nama default armada sesuai kebutuhan PO Nyentrix Trans:</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label><b>Kode Armada 1 (Biru):</b></label>
+                    <input type="text" id="rename-armada-0" placeholder="Nama Armada 1">
+
+                    <label><b>Kode Armada 2 (Hijau):</b></label>
+                    <input type="text" id="rename-armada-1" placeholder="Nama Armada 2">
+
+                    <label><b>Kode Armada 3 (Ungu):</b></label>
+                    <input type="text" id="rename-armada-2" placeholder="Nama Armada 3">
+
+                    <label><b>Kode Armada 4 (Oranye):</b></label>
+                    <input type="text" id="rename-armada-3" placeholder="Nama Armada 4">
+
+                    <button class="btn" style="background:#059669;" onclick="simpanNamaArmada()">Simpan Nama Armada</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MENU 3: DETAIL ORDER -->
         <div id="tab-order" class="tab-content hidden">
             <div class="card">
                 <h3>Detail Order Berdasarkan Armada</h3>
                 <label>Filter Armada:</label>
-                <select id="filter-armada" onchange="renderOrder()">
-                    <option value="semua">Semua Armada</option>
-                    <option value="Armada 01 (NX-01)">Armada 01 (NX-01)</option>
-                    <option value="Armada 02 (NX-02)">Armada 02 (NX-02)</option>
-                    <option value="Armada 03 (NX-03)">Armada 03 (NX-03)</option>
-                    <option value="Armada 04 (NX-04)">Armada 04 (NX-04)</option>
-                </select>
+                <select id="filter-armada" onchange="renderOrder()"></select>
                 <div id="list-order-detail"></div>
             </div>
         </div>
 
-        <!-- MENU 3: FOTO TRIP -->
+        <!-- MENU 4: FOTO TRIP -->
         <div id="tab-foto" class="tab-content hidden">
             <div class="card">
                 <h3>Laporan Foto Trip Armada</h3>
                 <div id="form-foto-admin" class="hidden" style="margin-bottom: 1rem;">
                     <label>Pilih Armada Trip:</label>
-                    <select id="foto-armada">
-                        <option value="Armada 01 (NX-01)">Armada 01 (NX-01)</option>
-                        <option value="Armada 02 (NX-02)">Armada 02 (NX-02)</option>
-                        <option value="Armada 03 (NX-03)">Armada 03 (NX-03)</option>
-                        <option value="Armada 04 (NX-04)">Armada 04 (NX-04)</option>
-                    </select>
+                    <select id="foto-armada"></select>
                     <label>Upload Foto:</label>
                     <input type="file" id="input-file-foto" accept="image/*">
                     <label>Keterangan Foto:</label>
@@ -309,12 +334,21 @@
     </div>
 
     <script>
-        // Database Lokal (Menyimpan di memori HP/Browser)
+        // Default Daftar Nama Armada
+        const defaultArmadaNames = [
+            "Armada 01 (NX-01)",
+            "Armada 02 (NX-02)",
+            "Armada 03 (NX-03)",
+            "Armada 04 (NX-04)"
+        ];
+
+        // Database Lokal
+        let armadaList = JSON.parse(localStorage.getItem('nyentrix_armada_names')) || defaultArmadaNames;
         let orders = JSON.parse(localStorage.getItem('nyentrix_orders')) || [];
         let photos = JSON.parse(localStorage.getItem('nyentrix_photos')) || [];
         let isAdmin = false;
 
-        // --- CEK THEME SAAT PERTAMA KALI HALAMAN DILOAD ---
+        // --- CEK THEME DILOAD ---
         document.addEventListener("DOMContentLoaded", () => {
             const savedTheme = localStorage.getItem('nyentrix_theme');
             if (savedTheme === 'dark') {
@@ -322,26 +356,21 @@
                 document.getElementById('themeIcon').innerText = '☀️';
                 document.getElementById('themeText').innerText = 'Light';
             }
+            populateArmadaDropdowns();
+            renderJadwal();
         });
 
-        // --- FITUR DARK MODE TOGGLE ---
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
-            
-            // Simpan status tema ke localStorage
             localStorage.setItem('nyentrix_theme', isDark ? 'dark' : 'light');
-
-            // Ubah ikon & teks tombol
             document.getElementById('themeIcon').innerText = isDark ? '☀️' : '🌙';
             document.getElementById('themeText').innerText = isDark ? 'Light' : 'Dark';
         }
 
-        // --- FITUR SHOW / HIDE PASSWORD ---
         function togglePasswordVisibility() {
             const passInput = document.getElementById('admin-pass');
             const toggleBtn = document.querySelector('.toggle-pwd-btn');
-            
             if (passInput.type === 'password') {
                 passInput.type = 'text';
                 toggleBtn.innerText = '🙈';
@@ -356,19 +385,60 @@
             document.querySelectorAll('.nav-tabs button').forEach(el => el.classList.remove('active'));
             document.getElementById('tab-' + tabId).classList.remove('hidden');
             event.currentTarget.classList.add('active');
+            
             if(tabId === 'order') renderOrder();
             if(tabId === 'foto') renderGallery();
         }
 
+        // Dropdown nama armada otomatis diperbarui
+        function populateArmadaDropdowns() {
+            const inputSelect = document.getElementById('input-armada');
+            const filterSelect = document.getElementById('filter-armada');
+            const fotoSelect = document.getElementById('foto-armada');
+
+            inputSelect.innerHTML = '';
+            fotoSelect.innerHTML = '';
+            filterSelect.innerHTML = '<option value="semua">Semua Armada</option>';
+
+            armadaList.forEach((armada, index) => {
+                inputSelect.innerHTML += `<option value="${index}">${armada}</option>`;
+                fotoSelect.innerHTML += `<option value="${index}">${armada}</option>`;
+                filterSelect.innerHTML += `<option value="${index}">${armada}</option>`;
+            });
+
+            // Isikan nilai input edit nama armada untuk admin
+            for(let i = 0; i < 4; i++) {
+                const inputRename = document.getElementById(`rename-armada-${i}`);
+                if(inputRename) inputRename.value = armadaList[i] || '';
+            }
+        }
+
+        function simpanNamaArmada() {
+            for(let i = 0; i < 4; i++) {
+                const val = document.getElementById(`rename-armada-${i}`).value.trim();
+                if(val) armadaList[i] = val;
+            }
+            localStorage.setItem('nyentrix_armada_names', JSON.stringify(armadaList));
+            populateArmadaDropdowns();
+            renderJadwal();
+            alert('Nama armada berhasil diperbarui!');
+        }
+
         function loginAdmin() {
             let pass = document.getElementById('admin-pass').value;
-            if(pass === 'nyentrix123') { // Password Admin Anda
+            if(pass === 'nyentrix123') { // Password Admin
                 isAdmin = true;
                 document.getElementById('admin-status').innerHTML = 'Status: <b style="color:#10b981;">Admin (Logged In)</b>';
                 document.getElementById('login-section').classList.add('hidden');
                 document.getElementById('logout-section').classList.remove('hidden');
+                
+                // Buka Form Admin
+                document.getElementById('admin-only-notice').classList.add('hidden');
                 document.getElementById('form-admin-order').classList.remove('hidden');
+                document.getElementById('form-custom-armada').classList.remove('hidden');
                 document.getElementById('form-foto-admin').classList.remove('hidden');
+                
+                renderJadwal();
                 alert('Berhasil Login sebagai Admin!');
             } else {
                 alert('Password Salah!');
@@ -380,15 +450,22 @@
             document.getElementById('admin-status').innerHTML = 'Status: <b>User (Viewer)</b>';
             document.getElementById('login-section').classList.remove('hidden');
             document.getElementById('logout-section').classList.add('hidden');
+            
+            // Sembunyikan Form Admin
+            document.getElementById('admin-only-notice').classList.remove('hidden');
             document.getElementById('form-admin-order').classList.add('hidden');
+            document.getElementById('form-custom-armada').classList.add('hidden');
             document.getElementById('form-foto-admin').classList.add('hidden');
+            
+            renderJadwal();
             alert('Berhasil Logout.');
         }
 
         function simpanData() {
+            let armadaIndex = document.getElementById('input-armada').value;
             let newOrder = {
                 id: Date.now(),
-                armada: document.getElementById('input-armada').value,
+                armadaIndex: armadaIndex,
                 tanggal: document.getElementById('input-tanggal').value,
                 tujuan: document.getElementById('input-tujuan').value,
                 lokasi: document.getElementById('input-lokasi').value,
@@ -405,12 +482,15 @@
             orders.push(newOrder);
             localStorage.setItem('nyentrix_orders', JSON.stringify(orders));
             alert('Jadwal berhasil disimpan!');
-            renderJadwal();
+            
             // Reset form
             document.getElementById('input-tujuan').value = '';
             document.getElementById('input-lokasi').value = '';
             document.getElementById('input-harga').value = '';
             document.getElementById('input-catatan').value = '';
+            
+            renderJadwal();
+            switchTab('jadwal'); // Pindah otomatis ke menu Lihat Jadwal
         }
 
         function renderJadwal() {
@@ -420,19 +500,27 @@
                 container.innerHTML = '<p>Belum ada jadwal tersimpan.</p>';
                 return;
             }
+            
             // Urutkan berdasarkan tanggal
             orders.sort((a,b) => new Date(a.tanggal) - new Date(b.tanggal));
 
             orders.forEach(ord => {
                 let div = document.createElement('div');
                 div.className = 'card';
-                div.style.borderLeft = '5px solid #2563eb';
+                
+                let idx = ord.armadaIndex || 0;
+                let namaArmada = armadaList[idx] || `Armada ${parseInt(idx)+1}`;
+                
+                // Border Kiri Sesuai Kode Warna Armada
+                const colors = ['#2563eb', '#10b981', '#8b5cf6', '#f97316'];
+                div.style.borderLeft = `5px solid ${colors[idx % 4]}`;
+
                 div.innerHTML = `
-                    <span class="badge">${ord.armada}</span>
-                    <h4 style="margin: 5px 0;">📅 ${ord.tanggal} (${ord.jam || 'Jam fleksibel'})</h4>
-                    <p><b>Tujuan:</b> ${ord.tujuan}</p>
-                    <p><b>Penjemputan:</b> ${ord.lokasi}</p>
-                    ${isAdmin ? `<button onclick="hapusOrder(${ord.id})" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Hapus Jadwal</button>` : ''}
+                    <span class="badge armada-${idx % 4}">${namaArmada}</span>
+                    <h4 style="margin: 8px 0 5px 0;">📅 ${ord.tanggal} (${ord.jam || 'Jam fleksibel'})</h4>
+                    <p style="margin: 4px 0;"><b>Tujuan:</b> ${ord.tujuan}</p>
+                    <p style="margin: 4px 0;"><b>Penjemputan:</b> ${ord.lokasi}</p>
+                    ${isAdmin ? `<button onclick="hapusOrder(${ord.id})" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-top:8px;">Hapus Jadwal</button>` : ''}
                 `;
                 container.appendChild(div);
             });
@@ -451,7 +539,7 @@
             let container = document.getElementById('list-order-detail');
             container.innerHTML = '';
 
-            let filtered = filter === 'semua' ? orders : orders.filter(o => o.armada === filter);
+            let filtered = filter === 'semua' ? orders : orders.filter(o => o.armadaIndex == filter);
 
             if(filtered.length === 0) {
                 container.innerHTML = '<p>Tidak ada detail order untuk armada ini.</p>';
@@ -461,8 +549,11 @@
             filtered.forEach(ord => {
                 let div = document.createElement('div');
                 div.className = 'card';
+                let idx = ord.armadaIndex || 0;
+                let namaArmada = armadaList[idx] || `Armada ${parseInt(idx)+1}`;
+
                 div.innerHTML = `
-                    <h4>${ord.armada} - ${ord.tanggal}</h4>
+                    <h4><span class="badge armada-${idx % 4}">${namaArmada}</span> - ${ord.tanggal}</h4>
                     <ul>
                         <li><b>Tujuan:</b> ${ord.tujuan}</li>
                         <li><b>Penjemputan:</b> ${ord.lokasi}</li>
@@ -477,7 +568,7 @@
 
         function uploadFoto() {
             let fileInput = document.getElementById('input-file-foto');
-            let armada = document.getElementById('foto-armada').value;
+            let armadaIndex = document.getElementById('foto-armada').value;
             let ket = document.getElementById('ket-foto').value;
 
             if(fileInput.files.length === 0) {
@@ -488,7 +579,7 @@
             let reader = new FileReader();
             reader.onload = function(e) {
                 let newPhoto = {
-                    armada: armada,
+                    armadaIndex: armadaIndex,
                     url: e.target.result,
                     keterangan: ket
                 };
@@ -512,16 +603,16 @@
             photos.forEach(p => {
                 let div = document.createElement('div');
                 div.className = 'gallery-item card';
+                let idx = p.armadaIndex || 0;
+                let namaArmada = armadaList[idx] || `Armada ${parseInt(idx)+1}`;
+
                 div.innerHTML = `
                     <img src="${p.url}">
-                    <p style="font-size:0.85rem; margin:5px 0;"><b>${p.armada}</b><br>${p.keterangan || ''}</p>
+                    <p style="font-size:0.85rem; margin:5px 0;"><span class="badge armada-${idx % 4}">${namaArmada}</span><br>${p.keterangan || ''}</p>
                 `;
                 container.appendChild(div);
             });
         }
-
-        // Jalankan saat pertama buka
-        renderJadwal();
     </script>
 </body>
 </html>
