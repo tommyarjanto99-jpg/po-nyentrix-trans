@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PO NYENTRIX TRANS - Manajemen Armada</title>
-    <!-- Font Google Inter agar Tampilan Elegan -->
+    <!-- Font Google Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -20,7 +20,7 @@
             --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
         }
 
-        /* Variabel untuk Dark Mode */
+        /* Dark Mode Variabel */
         body.dark-mode {
             --primary: #3b82f6;
             --secondary: #60a5fa;
@@ -68,7 +68,6 @@
             font-weight: 400;
         }
 
-        /* Tombol Dark Mode */
         .theme-toggle {
             position: absolute;
             top: 1.2rem;
@@ -85,21 +84,15 @@
             align-items: center;
             gap: 6px;
             backdrop-filter: blur(8px);
-            transition: all 0.2s ease;
-        }
-
-        .theme-toggle:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-1px);
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: -2rem auto 2rem auto;
             padding: 0 1rem;
         }
 
-        /* MENU DASHBOARD ELEGAN (Capsule Style terinspirasi dari gambar) */
+        /* DASHBOARD MENU CAPSULE STYLE */
         .dashboard-nav {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -116,7 +109,7 @@
         .nav-card {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 50px; /* Capsule Shape */
+            border-radius: 50px;
             padding: 10px 16px;
             display: flex;
             align-items: center;
@@ -124,46 +117,34 @@
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: var(--card-shadow);
-            position: relative;
-            overflow: hidden;
         }
 
         .nav-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.12);
         }
 
-        .nav-card.active {
-            border-color: transparent;
-        }
-
-        /* Gradasi Lingkaran Nomor/Ikon ala 3D */
         .nav-card .icon-circle {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: white;
             flex-shrink: 0;
             box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 4px 10px rgba(0,0,0,0.15);
             border: 3px solid #ffffff;
         }
 
-        body.dark-mode .nav-card .icon-circle {
-            border-color: var(--card);
-        }
+        body.dark-mode .nav-card .icon-circle { border-color: var(--card); }
 
-        /* Warna khusus tiap menu */
         .card-menu-1 .icon-circle { background: linear-gradient(135deg, #ec4899, #db2777); }
         .card-menu-2 .icon-circle { background: linear-gradient(135deg, #06b6d4, #0891b2); }
         .card-menu-3 .icon-circle { background: linear-gradient(135deg, #84cc16, #65a30d); }
         .card-menu-4 .icon-circle { background: linear-gradient(135deg, #f97316, #ea580c); }
 
-        /* Background saat Aktif */
         .card-menu-1.active { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
         .card-menu-2.active { background: linear-gradient(135deg, #cffaff, #a5f3fc); }
         .card-menu-3.active { background: linear-gradient(135deg, #ecfccb, #d9f99d); }
@@ -174,24 +155,9 @@
         body.dark-mode .card-menu-3.active { background: #365314; }
         body.dark-mode .card-menu-4.active { background: #7c2d12; }
 
-        .nav-card .info {
-            display: flex;
-            flex-direction: column;
-        }
+        .nav-card .info .title { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+        .nav-card .info .subtitle { font-size: 0.75rem; color: var(--text-muted); }
 
-        .nav-card .info .title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--text);
-        }
-
-        .nav-card .info .subtitle {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-
-        /* Card Umum */
         .card {
             background: var(--card);
             border-radius: 16px;
@@ -201,11 +167,96 @@
             border: 1px solid var(--border);
         }
 
-        .card h3, .card h4 {
-            margin-top: 0;
-            font-weight: 700;
-            letter-spacing: -0.3px;
+        /* STYLE STYLISH KALENDER KALENDER BULANAN */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
         }
+
+        .calendar-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .calendar-nav-btn {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            text-align: center;
+        }
+
+        .calendar-day-head {
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 6px 0;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .calendar-day-cell {
+            min-height: 85px;
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 4px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            border: 1px solid transparent;
+            overflow: hidden;
+        }
+
+        .calendar-day-cell.other-month {
+            opacity: 0.35;
+        }
+
+        .calendar-day-cell .day-number {
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            align-self: flex-end;
+            color: var(--text);
+        }
+
+        .calendar-day-cell.today {
+            border-color: var(--primary);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        /* Label Event Armada Berwarna di Kalender */
+        .event-chip {
+            width: 100%;
+            font-size: 0.68rem;
+            padding: 2px 4px;
+            border-radius: 4px;
+            margin-bottom: 2px;
+            color: white;
+            font-weight: 600;
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+
+        .event-chip.armada-0 { background-color: #2563eb; } /* Biru */
+        .event-chip.armada-1 { background-color: #10b981; } /* Hijau */
+        .event-chip.armada-2 { background-color: #8b5cf6; } /* Ungu */
+        .event-chip.armada-3 { background-color: #f97316; } /* Oranye */
 
         input, select, textarea {
             width: 100%;
@@ -217,13 +268,6 @@
             background-color: var(--bg);
             color: var(--text);
             font-family: inherit;
-            font-size: 0.9rem;
-            transition: border-color 0.2s;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
         }
 
         .password-wrapper {
@@ -232,10 +276,7 @@
             align-items: center;
         }
 
-        .password-wrapper input {
-            padding-right: 45px;
-            margin: 0;
-        }
+        .password-wrapper input { padding-right: 45px; margin: 0; }
 
         .toggle-pwd-btn {
             position: absolute;
@@ -244,7 +285,6 @@
             border: none;
             cursor: pointer;
             font-size: 1.1rem;
-            padding: 4px;
             color: var(--text-muted);
         }
 
@@ -258,15 +298,6 @@
             font-weight: 600;
             width: 100%;
             font-size: 0.95rem;
-            transition: background 0.2s, transform 0.1s;
-        }
-
-        button.btn:hover {
-            background: var(--secondary);
-        }
-
-        button.btn:active {
-            transform: scale(0.99);
         }
 
         .admin-panel {
@@ -277,9 +308,6 @@
             margin-bottom: 1rem;
         }
 
-        .hidden { display: none; }
-
-        /* Badge Armada */
         .badge {
             padding: 0.35rem 0.7rem;
             border-radius: 20px;
@@ -287,13 +315,14 @@
             font-weight: 700;
             color: white;
             display: inline-block;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .armada-0 { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
-        .armada-1 { background: linear-gradient(135deg, #10b981, #047857); }
-        .armada-2 { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
-        .armada-3 { background: linear-gradient(135deg, #f97316, #c2410c); }
+        .armada-0 { background: #2563eb; }
+        .armada-1 { background: #10b981; }
+        .armada-2 { background: #8b5cf6; }
+        .armada-3 { background: #f97316; }
+
+        .hidden { display: none; }
 
         .gallery-grid {
             display: grid;
@@ -303,9 +332,9 @@
 
         .gallery-item img {
             width: 100%;
-            height: 130px;
+            height: 120px;
             object-fit: cover;
-            border-radius: 10px;
+            border-radius: 8px;
         }
     </style>
 </head>
@@ -315,7 +344,6 @@
         <h2>PO NYENTRIX TRANS</h2>
         <p>Sistem Manajemen Jadwal & Armada Wisata</p>
         
-        <!-- TOMBOL DARK MODE -->
         <button id="themeToggle" class="theme-toggle" onclick="toggleDarkMode()">
             <span id="themeIcon">🌙</span> <span id="themeText">Dark</span>
         </button>
@@ -323,13 +351,13 @@
 
     <div class="container">
 
-        <!-- DASHBOARD MENU CAPSULE STYLE (Inspirasi Gambar) -->
+        <!-- DASHBOARD MENU CAPSULE STYLE -->
         <div class="dashboard-nav">
             <div class="nav-card card-menu-1 active" onclick="switchTab('jadwal', this)">
                 <div class="icon-circle">01</div>
                 <div class="info">
                     <span class="title">Lihat Jadwal</span>
-                    <span class="subtitle">Agenda Armada</span>
+                    <span class="subtitle">Kalender Armada</span>
                 </div>
             </div>
 
@@ -337,7 +365,7 @@
                 <div class="icon-circle">02</div>
                 <div class="info">
                     <span class="title">Tambah Jadwal</span>
-                    <span class="subtitle">Input Order Admin</span>
+                    <span class="subtitle">Input Order & Admin</span>
                 </div>
             </div>
 
@@ -359,41 +387,63 @@
         </div>
 
         
-        <!-- MENU 1: LIHAT JADWAL -->
+        <!-- MENU 1: LIHAT JADWAL (TAMPILAN KALENDER ALA GAMBAR) -->
         <div id="tab-jadwal" class="tab-content">
             <div class="card">
-                <h3>📅 Jadwal Armada Bulanan</h3>
-                <div class="admin-panel">
-                    <p id="admin-status" style="margin-top:0;">Status: <b>User (Viewer)</b></p>
-                    <div id="login-section">
-                        <div class="password-wrapper" style="margin-bottom: 0.8rem;">
-                            <input type="password" id="admin-pass" placeholder="Password Admin...">
-                            <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility()" title="Tampilkan/Sembunyikan Password">👁️</button>
-                        </div>
-                        <button class="btn" onclick="loginAdmin()">Login Admin</button>
-                    </div>
-                    <div id="logout-section" class="hidden">
-                        <button class="btn" style="background:#dc2626;" onclick="logoutAdmin()">Logout Admin</button>
-                    </div>
+                <div class="calendar-header">
+                    <button class="calendar-nav-btn" onclick="prevMonth()">&lt; Prev</button>
+                    <h3 id="calendar-title">Juni 2026</h3>
+                    <button class="calendar-nav-btn" onclick="nextMonth()">Next &gt;</button>
                 </div>
 
-                <!-- Tampilan Kalender / List Jadwal -->
-                <div id="list-jadwal">
-                    <!-- Data masuk otomatis via JS -->
+                <div class="calendar-grid">
+                    <div class="calendar-day-head">Min</div>
+                    <div class="calendar-day-head">Sen</div>
+                    <div class="calendar-day-head">Sel</div>
+                    <div class="calendar-day-head">Rab</div>
+                    <div class="calendar-day-head">Kam</div>
+                    <div class="calendar-day-head">Jum</div>
+                    <div class="calendar-day-head">Sab</div>
                 </div>
+                
+                <div class="calendar-grid" id="calendar-body" style="margin-top: 4px;">
+                    <!-- Grid tanggal di-render via Javascript -->
+                </div>
+            </div>
+            
+            <!-- Legenda Warna Armada -->
+            <div class="card" style="padding: 0.8rem 1.2rem;">
+                <div style="font-size: 0.8rem; font-weight: 700; margin-bottom: 6px;">Keterangan Warna Armada:</div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;" id="legend-container"></div>
             </div>
         </div>
 
-        <!-- MENU 2: TAMBAH JADWAL (INPUT ADMIN) -->
+        <!-- MENU 2: TAMBAH JADWAL & LOGIN ADMIN -->
         <div id="tab-tambah" class="tab-content hidden">
+            
+            <!-- PANEL LOGIN ADMIN (DIPINDAHKAN KE SINI) -->
+            <div class="card admin-panel">
+                <p id="admin-status" style="margin-top:0;">Status: <b>User (Viewer)</b></p>
+                <div id="login-section">
+                    <div class="password-wrapper" style="margin-bottom: 0.8rem;">
+                        <input type="password" id="admin-pass" placeholder="Password Admin...">
+                        <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility()" title="Tampilkan/Sembunyikan Password">👁️</button>
+                    </div>
+                    <button class="btn" onclick="loginAdmin()">Login Admin</button>
+                </div>
+                <div id="logout-section" class="hidden">
+                    <button class="btn" style="background:#dc2626;" onclick="logoutAdmin()">Logout Admin</button>
+                </div>
+            </div>
+
             <div id="admin-only-notice" class="card">
                 <p style="text-align: center; color: #dc2626; font-weight: 600; margin: 0;">
-                    ⚠️ Silakan Login Admin terlebih dahulu di menu "01 Lihat Jadwal" untuk input jadwal/ubah armada.
+                    ⚠️ Silakan Login Admin terlebih dahulu di atas untuk menginput jadwal atau mengubah nama armada.
                 </p>
             </div>
 
-            <div id="form-admin-order" class="card hidden" style="background:var(--card); border:1px solid #10b981;">
-                <h3 style="color:#10b981;">➕ Tambah Jadwal Baru (Admin)</h3>
+            <div id="form-admin-order" class="card hidden" style="border:1px solid #10b981;">
+                <h3 style="color:#10b981;">➕ Tambah Jadwal Baru</h3>
                 
                 <label><b>Pilih Armada:</b></label>
                 <select id="input-armada"></select>
@@ -402,10 +452,10 @@
                 <input type="date" id="input-tanggal">
 
                 <label><b>Tujuan:</b></label>
-                <input type="text" id="input-tujuan" placeholder="Contoh: Bali / Yogyakarta">
+                <input type="text" id="input-tujuan" placeholder="Contoh: Jogja / Bali / Bandung">
 
                 <label><b>Penjemputan:</b></label>
-                <input type="text" id="input-lokasi" placeholder="Contoh: Kantor PO Nyentrix">
+                <input type="text" id="input-lokasi" placeholder="Contoh: Garasi PO Nyentrix">
 
                 <label><b>Jam Jemput:</b></label>
                 <input type="time" id="input-jam">
@@ -426,16 +476,16 @@
                 
                 <div style="display: flex; flex-direction: column; gap: 4px;">
                     <label><b>Armada 1 (Biru):</b></label>
-                    <input type="text" id="rename-armada-0" placeholder="Nama Armada 1">
+                    <input type="text" id="rename-armada-0">
 
                     <label><b>Armada 2 (Hijau):</b></label>
-                    <input type="text" id="rename-armada-1" placeholder="Nama Armada 2">
+                    <input type="text" id="rename-armada-1">
 
                     <label><b>Armada 3 (Ungu):</b></label>
-                    <input type="text" id="rename-armada-2" placeholder="Nama Armada 3">
+                    <input type="text" id="rename-armada-2">
 
                     <label><b>Armada 4 (Oranye):</b></label>
-                    <input type="text" id="rename-armada-3" placeholder="Nama Armada 4">
+                    <input type="text" id="rename-armada-3">
 
                     <button class="btn" style="background:#059669; margin-top: 8px;" onclick="simpanNamaArmada()">Simpan Nama Armada</button>
                 </div>
@@ -473,16 +523,18 @@
 
     <script>
         const defaultArmadaNames = [
-            "Armada 01 (NX-01)",
-            "Armada 02 (NX-02)",
-            "Armada 03 (NX-03)",
-            "Armada 04 (NX-04)"
+            "Tomtom",
+            "Basir",
+            "Sitoen",
+            "Abi"
         ];
 
         let armadaList = JSON.parse(localStorage.getItem('nyentrix_armada_names')) || defaultArmadaNames;
         let orders = JSON.parse(localStorage.getItem('nyentrix_orders')) || [];
         let photos = JSON.parse(localStorage.getItem('nyentrix_photos')) || [];
         let isAdmin = false;
+
+        let currentDate = new Date(); // Tanggal acuan kalender
 
         document.addEventListener("DOMContentLoaded", () => {
             const savedTheme = localStorage.getItem('nyentrix_theme');
@@ -492,7 +544,8 @@
                 document.getElementById('themeText').innerText = 'Light';
             }
             populateArmadaDropdowns();
-            renderJadwal();
+            renderCalendar();
+            renderLegend();
         });
 
         function toggleDarkMode() {
@@ -522,6 +575,7 @@
             document.getElementById('tab-' + tabId).classList.remove('hidden');
             if(element) element.classList.add('active');
 
+            if(tabId === 'jadwal') renderCalendar();
             if(tabId === 'order') renderOrder();
             if(tabId === 'foto') renderGallery();
         }
@@ -554,8 +608,21 @@
             }
             localStorage.setItem('nyentrix_armada_names', JSON.stringify(armadaList));
             populateArmadaDropdowns();
-            renderJadwal();
+            renderCalendar();
+            renderLegend();
             alert('Nama armada berhasil diperbarui!');
+        }
+
+        function renderLegend() {
+            const legContainer = document.getElementById('legend-container');
+            legContainer.innerHTML = '';
+            armadaList.forEach((armada, idx) => {
+                legContainer.innerHTML += `
+                    <div style="display:flex; align-items:center; gap:4px; font-size:0.75rem;">
+                        <span class="badge armada-${idx % 4}" style="padding:2px 6px;">${armada}</span>
+                    </div>
+                `;
+            });
         }
 
         function loginAdmin() {
@@ -571,7 +638,7 @@
                 document.getElementById('form-custom-armada').classList.remove('hidden');
                 document.getElementById('form-foto-admin').classList.remove('hidden');
                 
-                renderJadwal();
+                renderCalendar();
                 alert('Berhasil Login sebagai Admin!');
             } else {
                 alert('Password Salah!');
@@ -589,8 +656,91 @@
             document.getElementById('form-custom-armada').classList.add('hidden');
             document.getElementById('form-foto-admin').classList.add('hidden');
             
-            renderJadwal();
+            renderCalendar();
             alert('Berhasil Logout.');
+        }
+
+        /* LOGIKA KALENDER BULANAN HASIL INSPIRASI GAMBAR */
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+
+            const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            document.getElementById('calendar-title').innerText = `${monthNames[month]} ${year}`;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const prevMonthDays = new Date(year, month, 0).getDate();
+
+            const calendarBody = document.getElementById('calendar-body');
+            calendarBody.innerHTML = '';
+
+            // Tanggal Bulan Lalu
+            for (let i = firstDay - 1; i >= 0; i--) {
+                let cell = document.createElement('div');
+                cell.className = 'calendar-day-cell other-month';
+                cell.innerHTML = `<span class="day-number">${prevMonthDays - i}</span>`;
+                calendarBody.appendChild(cell);
+            }
+
+            // Tanggal Bulan Ini
+            const today = new Date();
+            for (let day = 1; day <= daysInMonth; day++) {
+                let cell = document.createElement('div');
+                cell.className = 'calendar-day-cell';
+                
+                if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                    cell.classList.add('today');
+                }
+
+                let dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                
+                let dayNum = document.createElement('span');
+                dayNum.className = 'day-number';
+                dayNum.innerText = day;
+                cell.appendChild(dayNum);
+
+                // Cari order di tanggal ini
+                let dayOrders = orders.filter(o => o.tanggal === dateString);
+                dayOrders.forEach(ord => {
+                    let idx = ord.armadaIndex || 0;
+                    let namaArmada = armadaList[idx] || `Armada ${parseInt(idx)+1}`;
+                    
+                    let chip = document.createElement('div');
+                    chip.className = `event-chip armada-${idx % 4}`;
+                    chip.innerText = `${namaArmada} (${ord.tujuan})`;
+                    chip.title = `${namaArmada}\nTujuan: ${ord.tujuan}\nJemput: ${ord.lokasi}`;
+                    
+                    if (isAdmin) {
+                        chip.onclick = () => hapusOrder(ord.id);
+                    }
+                    cell.appendChild(chip);
+                });
+
+                calendarBody.appendChild(cell);
+            }
+
+            // Sisa Grid Bulan Depan
+            let totalCells = firstDay + daysInMonth;
+            let nextDays = 7 - (totalCells % 7);
+            if (nextDays < 7) {
+                for (let j = 1; j <= nextDays; j++) {
+                    let cell = document.createElement('div');
+                    cell.className = 'calendar-day-cell other-month';
+                    cell.innerHTML = `<span class="day-number">${j}</span>`;
+                    calendarBody.appendChild(cell);
+                }
+            }
+        }
+
+        function prevMonth() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        }
+
+        function nextMonth() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
         }
 
         function simpanData() {
@@ -620,49 +770,18 @@
             document.getElementById('input-harga').value = '';
             document.getElementById('input-catatan').value = '';
             
-            renderJadwal();
+            renderCalendar();
             
-            // Pindah ke tab 01
+            // Otomatis pindah ke Kalender
             const firstCard = document.querySelector('.card-menu-1');
             switchTab('jadwal', firstCard);
-        }
-
-        function renderJadwal() {
-            let container = document.getElementById('list-jadwal');
-            container.innerHTML = '';
-            if(orders.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">Belum ada jadwal tersimpan.</p>';
-                return;
-            }
-            
-            orders.sort((a,b) => new Date(a.tanggal) - new Date(b.tanggal));
-
-            orders.forEach(ord => {
-                let div = document.createElement('div');
-                div.className = 'card';
-                
-                let idx = ord.armadaIndex || 0;
-                let namaArmada = armadaList[idx] || `Armada ${parseInt(idx)+1}`;
-                
-                const colors = ['#2563eb', '#10b981', '#8b5cf6', '#f97316'];
-                div.style.borderLeft = `5px solid ${colors[idx % 4]}`;
-
-                div.innerHTML = `
-                    <span class="badge armada-${idx % 4}">${namaArmada}</span>
-                    <h4 style="margin: 10px 0 6px 0; font-size:1.1rem;">📅 ${ord.tanggal} (${ord.jam || 'Jam fleksibel'})</h4>
-                    <p style="margin: 4px 0; font-size:0.9rem;"><b>Tujuan:</b> ${ord.tujuan}</p>
-                    <p style="margin: 4px 0; font-size:0.9rem;"><b>Penjemputan:</b> ${ord.lokasi}</p>
-                    ${isAdmin ? `<button onclick="hapusOrder(${ord.id})" style="background:#ef4444; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; margin-top:10px; font-weight:600; font-size:0.8rem;">Hapus Jadwal</button>` : ''}
-                `;
-                container.appendChild(div);
-            });
         }
 
         function hapusOrder(id) {
             if(confirm('Yakin ingin menghapus jadwal ini?')) {
                 orders = orders.filter(o => o.id !== id);
                 localStorage.setItem('nyentrix_orders', JSON.stringify(orders));
-                renderJadwal();
+                renderCalendar();
             }
         }
 
