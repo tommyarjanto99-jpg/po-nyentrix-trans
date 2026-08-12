@@ -546,79 +546,109 @@
     </div>
 
     <script>
-        // PASTE URL APPS SCRIPT ANDA DI SINI
-        const API_URL = "https://script.google.com/macros/s/AKfycbxFYkv96C2PullSDx24ROR_DqWKT5Ha_X_qK1rNkapfgb0KJwJGKXTu7ehI0SuQMw/exec-KRy50bBKjA/exec";
+       // Gantilah URL di bawah ini dengan URL Deployment BARU kamu
+const API_URL = "URL_APPS_SCRIPT_BARU_KAMU_BERAKHIRAN_EXEC";
 
-        const defaultArmadaNames = ["Tomtom", "Basir", "Sitoen", "Abi"];
-        let armadaList = [...defaultArmadaNames];
-        let orders = [];
-        let photos = [];
-        let serverAdminPassword = "nyentrix123";
-        let isAdmin = false;
-        let currentDate = new Date();
-        let lastDataHash = "";
+// FUNGSI SEND TO CLOUD YANG SUDAH DIPERBAIKI SINKRONISASINYA
+async function sendToCloud(action, payload) {
+    if (!API_URL || API_URL.includes("URL_APPS_SCRIPT")) {
+        alert("URL Google Apps Script belum dipasang!");
+        return;
+    }
+    try {
+        // Menggunakan method POST dengan blob agar diterima sempurna oleh Apps Script
+        await fetch(API_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: action, data: payload, id: payload ? payload.id : null })
+        });
+        // Beri jeda 1.5 detik lalu refresh data otomatis
+        setTimeout(loadDataFromCloud, 1500);
+    } catch(err) {
+        console.error("Gagal mengirim data:", err);
+    }
+}
 
-        document.addEventListener("DOMContentLoaded", () => {
-            const savedTheme = localStorage.getItem('nyentrix_theme');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-mode');
-                document.getElementById('themeIcon').innerText = '☀️';
-                document.getElementById('themeText').innerText = 'Light';
-            }
-            populateArmadaDropdowns();
-            renderCalendar();
-            renderLegend();
+// FUNGSI RENDER KALENDER YANG SUDAH DIPERBAIKI WARNA & COCOK TANGGALNYA
+function renderCalendar() {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
 
-            // Panggil data pertama kali & jalankan auto-sync tiap 4 detik
-            loadDataFromCloud();
-            setInterval(loadDataFromCloud, 4000);
+    const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    document.getElementById('calendar-title').innerText = `${monthNames[month]} ${year}`;
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const prevMonthDays = new Date(year, month, 0).getDate();
+
+    const calendarBody = document.getElementById('calendar-body');
+    calendarBody.innerHTML = '';
+
+    // Tanggal Bulan Lalu
+    for (let i = firstDay - 1; i >= 0; i--) {
+        let cell = document.createElement('div');
+        cell.className = 'calendar-day-cell other-month';
+        cell.innerHTML = `<span class="day-number">${prevMonthDays - i}</span>`;
+        calendarBody.appendChild(cell);
+    }
+
+    // Tanggal Bulan Ini
+    const today = new Date();
+    for (let day = 1; day <= daysInMonth; day++) {
+        let cell = document.createElement('div');
+        cell.className = 'calendar-day-cell';
+        
+        if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+            cell.classList.add('today');
+        }
+
+        // Format tanggal YYYY-MM-DD
+        let dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        
+        let dayNum = document.createElement('span');
+        dayNum.className = 'day-number';
+        dayNum.innerText = day;
+        cell.appendChild(dayNum);
+
+        // Filter jadwal yang cocok dengan tanggal hari ini
+        let dayOrders = orders.filter(o => {
+            if(!o.tanggal) return false;
+            // Potong jika ada jam/format ISO (misal 2026-08-12T00:00:00)
+            let cleanDate = o.tanggal.split('T')[0].trim();
+            return cleanDate === dateString;
         });
 
-        async function loadDataFromCloud() {
-            if (!API_URL || API_URL.includes("https://script.google.com/macros/s/AKfycbxFYkv96C2PullSDx24ROR_DqWKT5Ha_X_qK1rNkapfgb0KJwJGKXTu7ehI0SuQMw/exec-KRy50bBKjA/exec")) return;
-            try {
-                const res = await fetch(API_URL);
-                const data = await res.json();
-
-                // Mencegah perkedipan halaman jika data tidak berubah
-                const currentHash = JSON.stringify(data);
-                if (currentHash === lastDataHash) return;
-                lastDataHash = currentHash;
-
-                if (data.armada && data.armada.length === 4) {
-                    armadaList = data.armada;
-                }
-                if (data.adminPass) {
-                    serverAdminPassword = data.adminPass;
-                }
-                orders = data.orders || [];
-                photos = data.photos || [];
-
-                populateArmadaDropdowns();
-                renderCalendar();
-                renderLegend();
-                renderOrder();
-                renderGallery();
-            } catch (err) {
-                console.error("Gagal sinkronkan data:", err);
+        dayOrders.forEach(ord => {
+            // Konversi armadaIndex ke Integer agar class warna .armada-0, .armada-1, dll terbaca
+            let idx = parseInt(ord.armadaIndex) || 0;
+            let namaArmada = armadaList[idx] || `Armada ${idx + 1}`;
+            
+            let chip = document.createElement('div');
+            // Menentukan class warna berdasarkan index armada (0: Biru, 1: Hijau, 2: Ungu, 3: Oranye)
+            chip.className = `event-chip armada-${idx % 4}`;
+            chip.innerText = `${namaArmada} (${ord.tujuan})`;
+            chip.title = `${namaArmada}\nTujuan: ${ord.tujuan}\nJemput: ${ord.lokasi}`;
+            
+            if (isAdmin) {
+                chip.onclick = () => hapusOrder(ord.id);
             }
-        }
+            cell.appendChild(chip);
+        });
 
-        function sendToCloud(action, payload) {
-            if (!API_URL || API_URL.includes("https://script.google.com/macros/s/AKfycbxFYkv96C2PullSDx24ROR_DqWKT5Ha_X_qK1rNkapfgb0KJwJGKXTu7ehI0SuQMw/exec-KRy50bBKjA/exec")) {
-                alert("URL Google Apps Script belum dipasang!");
-                return;
-            }
-            fetch(API_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: action, data: payload, id: payload ? payload.id : null })
-            }).then(() => {
-                setTimeout(loadDataFromCloud, 1000);
-            });
-        }
+        calendarBody.appendChild(cell);
+    }
 
+    // Sisa Grid Bulan Depan
+    let totalCells = firstDay + daysInMonth;
+    let nextDays = 7 - (totalCells % 7);
+    if (nextDays < 7) {
+        for (let j = 1; j <= nextDays; j++) {
+            let cell = document.createElement('div');
+            cell.className = 'calendar-day-cell other-month';
+            cell.innerHTML = `<span class="day-number">${j}</span>`;
+            calendarBody.appendChild(cell);
+        }
+    }
+}
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
