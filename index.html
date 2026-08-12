@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PO NYENTRIX TRANS - Manajemen Armada</title>
-    <!-- Font Google Inter, Great Vibes (Script Font) & Cinzel -->
+    <title>PO NYENTRIX TRANS - Firebase Realtime</title>
+    <!-- Font Google -->
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600;700;800&family=Cinzel:wght@800;900&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK (Version 9 Modern) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
     <style>
         @font-face {
             font-family: 'LHF Convecta';
@@ -81,9 +86,7 @@
             box-shadow: var(--card-shadow);
         }
 
-        .nav-card:hover {
-            transform: translateY(-3px);
-        }
+        .nav-card:hover { transform: translateY(-3px); }
 
         .nav-card .icon-circle {
             width: 44px;
@@ -185,11 +188,7 @@
             margin-bottom: 1rem;
         }
 
-        .calendar-header h3 {
-            margin: 0;
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
+        .calendar-header h3 { margin: 0; font-size: 1.2rem; font-weight: 700; }
 
         .calendar-nav-btn {
             background: var(--bg);
@@ -260,11 +259,11 @@
             cursor: pointer;
         }
 
-        /* Warna Chip Armada di Kalender */
-        .event-chip.armada-0 { background-color: #2563eb !important; } /* Biru */
-        .event-chip.armada-1 { background-color: #10b981 !important; } /* Hijau */
-        .event-chip.armada-2 { background-color: #8b5cf6 !important; } /* Ungu */
-        .event-chip.armada-3 { background-color: #f97316 !important; } /* Oranye */
+        /* Warna Chip Kalender */
+        .event-chip.armada-0 { background-color: #2563eb !important; }
+        .event-chip.armada-1 { background-color: #10b981 !important; }
+        .event-chip.armada-2 { background-color: #8b5cf6 !important; }
+        .event-chip.armada-3 { background-color: #f97316 !important; }
 
         input, select, textarea {
             width: 100%;
@@ -278,12 +277,7 @@
             font-family: inherit;
         }
 
-        .password-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
+        .password-wrapper { position: relative; display: flex; align-items: center; }
         .password-wrapper input { padding-right: 45px; margin: 0; }
 
         .toggle-pwd-btn {
@@ -318,12 +312,7 @@
             font-size: 0.8rem;
             font-weight: 600;
             margin-top: 10px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
         }
-
-        .btn-delete:hover { background: #b91c1c; }
 
         .admin-panel {
             background: var(--admin-bg);
@@ -349,31 +338,21 @@
 
         .hidden { display: none; }
 
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
+        .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .gallery-item img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; }
     </style>
 </head>
 <body>
 
     <div class="container">
 
-        <!-- DASHBOARD MENU NAVIGASI -->
+        <!-- DASHBOARD NAVIGASI -->
         <div class="dashboard-nav">
             <div class="nav-card card-menu-1 active" onclick="switchTab('jadwal', this)">
                 <div class="icon-circle">01</div>
                 <div class="info">
                     <span class="title">Lihat Jadwal</span>
-                    <span class="subtitle">Kalender Armada</span>
+                    <span class="subtitle">Kalender Realtime</span>
                 </div>
             </div>
 
@@ -402,7 +381,7 @@
             </div>
         </div>
 
-        <!-- HEADER BANNER PO NYENTRIX TRANS -->
+        <!-- HEADER -->
         <header>
             <button id="themeToggle" class="theme-toggle" onclick="toggleDarkMode()">
                 <span id="themeIcon">🌙</span> <span id="themeText">Dark</span>
@@ -411,12 +390,12 @@
             <p class="slogan">Service Is Our Priority</p>
         </header>
 
-        <!-- MENU 1: LIHAT JADWAL KALENDER -->
+        <!-- MENU 1: JADWAL KALENDER -->
         <div id="tab-jadwal" class="tab-content">
             <div class="card">
                 <div class="calendar-header">
                     <button class="calendar-nav-btn" onclick="prevMonth()">&lt; Prev</button>
-                    <h3 id="calendar-title">Juni 2026</h3>
+                    <h3 id="calendar-title">Agustus 2026</h3>
                     <button class="calendar-nav-btn" onclick="nextMonth()">Next &gt;</button>
                 </div>
 
@@ -439,9 +418,8 @@
             </div>
         </div>
 
-        <!-- MENU 2: TAMBAH JADWAL & LOGIN ADMIN -->
+        <!-- MENU 2: INPUT & ADMIN -->
         <div id="tab-tambah" class="tab-content hidden">
-            
             <div class="card admin-panel">
                 <p id="admin-status" style="margin-top:0;">Status: <b>User (Viewer)</b></p>
                 <div id="login-section">
@@ -458,7 +436,7 @@
 
             <div id="admin-only-notice" class="card">
                 <p style="text-align: center; color: #dc2626; font-weight: 600; margin: 0;">
-                    ⚠️ Silakan Login Admin terlebih dahulu di atas untuk menginput jadwal, menghapus order, atau mengubah nama armada.
+                    ⚠️ Silakan Login Admin terlebih dahulu di atas untuk menginput jadwal atau mengubah setting.
                 </p>
             </div>
 
@@ -489,7 +467,6 @@
                 <button class="btn" style="background:#10b981;" onclick="simpanData()">Simpan Jadwal Order</button>
             </div>
 
-            <!-- PENGATURAN NAMA ARMADA & PASSWORD -->
             <div id="form-custom-armada" class="card hidden">
                 <h3>⚙️ Pengaturan Nama Armada</h3>
                 <div style="display: flex; flex-direction: column; gap: 4px; margin-bottom: 1.5rem;">
@@ -547,17 +524,29 @@
     </div>
 
     <script>
-        // MASUKKAN URL GOOGLE APPS SCRIPT KAMU DI DALAM TANDA PETIK DI BAWAH INI:
-        const API_URL = "https://script.google.com/macros/s/AKfycbxFYkv96C2PullSDx24ROR_DqWKT5Ha_X_qK1rNkapfgb0KJwJGKXTu7ehI0SuQMw/exec-";
+        // ========================================================
+        // TEMPELKAN KONFIGURASI FIREBASE KAMU DI BAWAH INI:
+        // ========================================================
+        const firebaseConfig = {
+  apiKey: "AIzaSyCJL7cHd8MvUUI_eXbySVAaVI2UJWlkipY",
+  authDomain: "nyentrix-trans-aea6a.firebaseapp.com",
+  databaseURL: "https://nyentrix-trans-aea6a-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "nyentrix-trans-aea6a",
+  storageBucket: "nyentrix-trans-aea6a.firebasestorage.app",
+  messagingSenderId: "154425413043",
+  appId: "1:154425413043:web:530fdb94f2950d47e4cfc6"
+};
 
-        const defaultArmadaNames = ["Tomtom", "Basir", "Sitoen", "Abi"];
-        let armadaList = [...defaultArmadaNames];
-        let orders = [];
-        let photos = [];
+        // Inisialisasi Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let armadaList = ["Tomtom", "Basir", "Sitoen", "Abi"];
+        let orders = {};
+        let photos = {};
         let serverAdminPassword = "nyentrix123";
         let isAdmin = false;
         let currentDate = new Date();
-        let lastDataHash = "";
 
         document.addEventListener("DOMContentLoaded", () => {
             const savedTheme = localStorage.getItem('nyentrix_theme');
@@ -566,59 +555,30 @@
                 document.getElementById('themeIcon').innerText = '☀️';
                 document.getElementById('themeText').innerText = 'Light';
             }
-            populateArmadaDropdowns();
-            renderCalendar();
-            renderLegend();
 
-            loadDataFromCloud();
-            // Melakukan pemeriksaan sinkronisasi otomatis ke Google Sheets tiap 4 detik
-            setInterval(loadDataFromCloud, 4000);
-        });
-
-        async function loadDataFromCloud() {
-            if (!API_URL || API_URL.includes("PASTE_URL")) return;
-            try {
-                const res = await fetch(API_URL);
-                const data = await res.json();
-
-                const currentHash = JSON.stringify(data);
-                if (currentHash === lastDataHash) return;
-                lastDataHash = currentHash;
-
-                if (data.armada && data.armada.length === 4) {
-                    armadaList = data.armada;
-                }
-                if (data.adminPass) {
-                    serverAdminPassword = data.adminPass;
-                }
-                orders = data.orders || [];
-                photos = data.photos || [];
-
+            // LISTENERS REALTIME FIREBASE (Otomatis Update tanpa refresh)
+            db.ref('armada').on('value', snapshot => {
+                if (snapshot.exists()) armadaList = snapshot.val();
                 populateArmadaDropdowns();
                 renderCalendar();
                 renderLegend();
-                renderOrder();
-                renderGallery();
-            } catch (err) {
-                console.error("Gagal sinkronkan data:", err);
-            }
-        }
+            });
 
-        async function sendToCloud(action, payload) {
-            if (!API_URL || API_URL.includes("PASTE_URL")) {
-                alert("URL Google Apps Script belum dipasang!");
-                return;
-            }
-            try {
-                await fetch(API_URL, {
-                    method: "POST",
-                    body: JSON.stringify({ action: action, data: payload, id: payload ? payload.id : null })
-                });
-                setTimeout(loadDataFromCloud, 1200);
-            } catch(err) {
-                console.error("Gagal kirim data:", err);
-            }
-        }
+            db.ref('adminPass').on('value', snapshot => {
+                if (snapshot.exists()) serverAdminPassword = snapshot.val();
+            });
+
+            db.ref('orders').on('value', snapshot => {
+                orders = snapshot.exists() ? snapshot.val() : {};
+                renderCalendar();
+                renderOrder();
+            });
+
+            db.ref('photos').on('value', snapshot => {
+                photos = snapshot.exists() ? snapshot.val() : {};
+                renderGallery();
+            });
+        });
 
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
@@ -679,23 +639,17 @@
                 const val = document.getElementById(`rename-armada-${i}`).value.trim();
                 newNames.push(val || armadaList[i]);
             }
-            armadaList = newNames;
-            populateArmadaDropdowns();
-            renderCalendar();
-            renderLegend();
-            
-            sendToCloud("saveArmada", newNames);
-            alert('Nama armada berhasil diperbarui!');
+            db.ref('armada').set(newNames);
+            alert('Nama armada berhasil disimpan di Firebase!');
         }
 
         function simpanPasswordBaru() {
             let passBaru = document.getElementById('new-admin-password').value.trim();
             if(!passBaru) {
-                alert('Masukkan password baru terlebih dahulu!');
+                alert('Masukkan password baru!');
                 return;
             }
-            serverAdminPassword = passBaru;
-            sendToCloud("savePassword", passBaru);
+            db.ref('adminPass').set(passBaru);
             alert('Password Admin berhasil diubah!');
             document.getElementById('new-admin-password').value = '';
         }
@@ -727,7 +681,7 @@
                 
                 renderCalendar();
                 renderOrder();
-                alert('Berhasil Login sebagai Admin!');
+                alert('Berhasil Login Admin!');
             } else {
                 alert('Password Salah!');
             }
@@ -786,26 +740,23 @@
                 dayNum.innerText = day;
                 cell.appendChild(dayNum);
 
-                // Filter tanggalan dengan penanganan string yang kuat
-                let dayOrders = orders.filter(o => {
-                    if(!o.tanggal) return false;
-                    let cleanDate = String(o.tanggal).split('T')[0].trim();
-                    return cleanDate === dateString;
-                });
-
-                dayOrders.forEach(ord => {
-                    let idx = parseInt(ord.armadaIndex) || 0;
-                    let namaArmada = armadaList[idx] || `Armada ${idx + 1}`;
-                    
-                    let chip = document.createElement('div');
-                    chip.className = `event-chip armada-${idx % 4}`;
-                    chip.innerText = `${namaArmada} (${ord.tujuan})`;
-                    chip.title = `${namaArmada}\nTujuan: ${ord.tujuan}\nJemput: ${ord.lokasi}`;
-                    
-                    if (isAdmin) {
-                        chip.onclick = () => hapusOrder(ord.id);
+                // Ambil daftar order
+                Object.keys(orders).forEach(key => {
+                    let ord = orders[key];
+                    if(ord.tanggal === dateString) {
+                        let idx = parseInt(ord.armadaIndex) || 0;
+                        let namaArmada = armadaList[idx] || `Armada ${idx + 1}`;
+                        
+                        let chip = document.createElement('div');
+                        chip.className = `event-chip armada-${idx % 4}`;
+                        chip.innerText = `${namaArmada} (${ord.tujuan})`;
+                        chip.title = `${namaArmada}\nTujuan: ${ord.tujuan}\nJemput: ${ord.lokasi}`;
+                        
+                        if (isAdmin) {
+                            chip.onclick = () => hapusOrder(key);
+                        }
+                        cell.appendChild(chip);
                     }
-                    cell.appendChild(chip);
                 });
 
                 calendarBody.appendChild(cell);
@@ -835,46 +786,43 @@
 
         function simpanData() {
             let armadaIndex = document.getElementById('input-armada').value;
+            let tanggal = document.getElementById('input-tanggal').value;
+            let tujuan = document.getElementById('input-tujuan').value;
+
+            if(!tanggal || !tujuan) {
+                alert('Tanggal dan Tujuan wajib diisi!');
+                return;
+            }
+
             let newOrder = {
-                id: Date.now(),
                 armadaIndex: armadaIndex,
-                tanggal: document.getElementById('input-tanggal').value,
-                tujuan: document.getElementById('input-tujuan').value,
+                tanggal: tanggal,
+                tujuan: tujuan,
                 lokasi: document.getElementById('input-lokasi').value,
                 jam: document.getElementById('input-jam').value,
                 harga: document.getElementById('input-harga').value,
                 catatan: document.getElementById('input-catatan').value
             };
 
-            if(!newOrder.tanggal || !newOrder.tujuan) {
-                alert('Tanggal dan Tujuan wajib diisi!');
-                return;
-            }
+            // Simpan langsung ke Firebase Realtime
+            db.ref('orders').push(newOrder);
+            alert('Jadwal berhasil tersimpan secara Realtime!');
 
-            orders.push(newOrder);
-            sendToCloud("saveOrder", newOrder);
-            alert('Jadwal berhasil disimpan!');
-            
             document.getElementById('input-tujuan').value = '';
             document.getElementById('input-lokasi').value = '';
             document.getElementById('input-harga').value = '';
             document.getElementById('input-catatan').value = '';
             
-            renderCalendar();
-            const firstCard = document.querySelector('.card-menu-1');
-            switchTab('jadwal', firstCard);
+            switchTab('jadwal', document.querySelector('.card-menu-1'));
         }
 
-        function hapusOrder(id) {
+        function hapusOrder(key) {
             if(!isAdmin) {
-                alert('Hanya Admin yang diizinkan untuk menghapus jadwal.');
+                alert('Hanya Admin yang dapat menghapus jadwal.');
                 return;
             }
             if(confirm('Yakin ingin menghapus jadwal ini?')) {
-                orders = orders.filter(o => String(o.id) !== String(id));
-                sendToCloud("deleteOrder", { id: id });
-                renderCalendar();
-                renderOrder();
+                db.ref('orders/' + key).remove();
             }
         }
 
@@ -883,38 +831,41 @@
             let container = document.getElementById('list-order-detail');
             container.innerHTML = '';
 
-            let filtered = filter === 'semua' ? orders : orders.filter(o => String(o.armadaIndex) === String(filter));
+            let orderKeys = Object.keys(orders);
 
-            if(filtered.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">Tidak ada detail order untuk armada ini.</p>';
+            if(orderKeys.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">Belum ada order terdaftar.</p>';
                 return;
             }
 
-            filtered.forEach(ord => {
-                let div = document.createElement('div');
-                div.className = 'card';
-                let idx = parseInt(ord.armadaIndex) || 0;
-                let namaArmada = armadaList[idx] || `Armada ${idx + 1}`;
+            orderKeys.forEach(key => {
+                let ord = orders[key];
+                if(filter === 'semua' || String(ord.armadaIndex) === String(filter)) {
+                    let div = document.createElement('div');
+                    div.className = 'card';
+                    let idx = parseInt(ord.armadaIndex) || 0;
+                    let namaArmada = armadaList[idx] || `Armada ${idx + 1}`;
 
-                let deleteBtnHtml = isAdmin 
-                    ? `<button class="btn-delete" onclick="hapusOrder('${ord.id}')">🗑️ Hapus Jadwal</button>` 
-                    : '';
+                    let deleteBtnHtml = isAdmin 
+                        ? `<button class="btn-delete" onclick="hapusOrder('${key}')">🗑️ Hapus Jadwal</button>` 
+                        : '';
 
-                div.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                        <span class="badge armada-${idx % 4}">${namaArmada}</span>
-                        <span style="font-weight:700; font-size:0.9rem;">📅 ${ord.tanggal}</span>
-                    </div>
-                    <ul style="padding-left:1.2rem; margin:0; font-size:0.9rem; line-height:1.6;">
-                        <li><b>Tujuan:</b> ${ord.tujuan}</li>
-                        <li><b>Penjemputan:</b> ${ord.lokasi}</li>
-                        <li><b>Jam Jemput:</b> ${ord.jam}</li>
-                        <li><b>Nilai Sewa:</b> Rp ${Number(ord.harga || 0).toLocaleString()}</li>
-                        <li><b>Lain-lain:</b> ${ord.catatan || '-'}</li>
-                    </ul>
-                    ${deleteBtnHtml}
-                `;
-                container.appendChild(div);
+                    div.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <span class="badge armada-${idx % 4}">${namaArmada}</span>
+                            <span style="font-weight:700; font-size:0.9rem;">📅 ${ord.tanggal}</span>
+                        </div>
+                        <ul style="padding-left:1.2rem; margin:0; font-size:0.9rem; line-height:1.6;">
+                            <li><b>Tujuan:</b> ${ord.tujuan}</li>
+                            <li><b>Penjemputan:</b> ${ord.lokasi}</li>
+                            <li><b>Jam Jemput:</b> ${ord.jam}</li>
+                            <li><b>Nilai Sewa:</b> Rp ${Number(ord.harga || 0).toLocaleString()}</li>
+                            <li><b>Lain-lain:</b> ${ord.catatan || '-'}</li>
+                        </ul>
+                        ${deleteBtnHtml}
+                    `;
+                    container.appendChild(div);
+                }
             });
         }
 
@@ -935,10 +886,8 @@
                     url: e.target.result,
                     keterangan: ket
                 };
-                photos.push(newPhoto);
-                sendToCloud("savePhoto", newPhoto);
-                alert('Foto berhasil diunggah!');
-                renderGallery();
+                db.ref('photos').push(newPhoto);
+                alert('Foto tersimpan secara Realtime!');
                 document.getElementById('ket-foto').value = '';
                 fileInput.value = '';
             }
@@ -948,11 +897,15 @@
         function renderGallery() {
             let container = document.getElementById('gallery-container');
             container.innerHTML = '';
-            if(photos.length === 0) {
+            let photoKeys = Object.keys(photos);
+
+            if(photoKeys.length === 0) {
                 container.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">Belum ada foto trip.</p>';
                 return;
             }
-            photos.forEach(p => {
+
+            photoKeys.forEach(key => {
+                let p = photos[key];
                 let div = document.createElement('div');
                 div.className = 'gallery-item card';
                 let idx = parseInt(p.armadaIndex) || 0;
