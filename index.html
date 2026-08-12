@@ -260,10 +260,11 @@
             cursor: pointer;
         }
 
-        .event-chip.armada-0 { background-color: #2563eb; }
-        .event-chip.armada-1 { background-color: #10b981; }
-        .event-chip.armada-2 { background-color: #8b5cf6; }
-        .event-chip.armada-3 { background-color: #f97316; }
+        /* Warna Chip Armada di Kalender */
+        .event-chip.armada-0 { background-color: #2563eb !important; } /* Biru */
+        .event-chip.armada-1 { background-color: #10b981 !important; } /* Hijau */
+        .event-chip.armada-2 { background-color: #8b5cf6 !important; } /* Ungu */
+        .event-chip.armada-3 { background-color: #f97316 !important; } /* Oranye */
 
         input, select, textarea {
             width: 100%;
@@ -366,7 +367,7 @@
 
     <div class="container">
 
-        <!-- DASHBOARD NAV -->
+        <!-- DASHBOARD MENU NAVIGASI -->
         <div class="dashboard-nav">
             <div class="nav-card card-menu-1 active" onclick="switchTab('jadwal', this)">
                 <div class="icon-circle">01</div>
@@ -401,7 +402,7 @@
             </div>
         </div>
 
-        <!-- HEADER BANNER -->
+        <!-- HEADER BANNER PO NYENTRIX TRANS -->
         <header>
             <button id="themeToggle" class="theme-toggle" onclick="toggleDarkMode()">
                 <span id="themeIcon">🌙</span> <span id="themeText">Dark</span>
@@ -410,7 +411,7 @@
             <p class="slogan">Service Is Our Priority</p>
         </header>
 
-        <!-- MENU 1: LIHAT JADWAL -->
+        <!-- MENU 1: LIHAT JADWAL KALENDER -->
         <div id="tab-jadwal" class="tab-content">
             <div class="card">
                 <div class="calendar-header">
@@ -438,7 +439,7 @@
             </div>
         </div>
 
-        <!-- MENU 2: TAMBAH JADWAL -->
+        <!-- MENU 2: TAMBAH JADWAL & LOGIN ADMIN -->
         <div id="tab-tambah" class="tab-content hidden">
             
             <div class="card admin-panel">
@@ -488,7 +489,7 @@
                 <button class="btn" style="background:#10b981;" onclick="simpanData()">Simpan Jadwal Order</button>
             </div>
 
-            <!-- CUSTOM ARMADA & CUSTOM PASSWORD -->
+            <!-- PENGATURAN NAMA ARMADA & PASSWORD -->
             <div id="form-custom-armada" class="card hidden">
                 <h3>⚙️ Pengaturan Nama Armada</h3>
                 <div style="display: flex; flex-direction: column; gap: 4px; margin-bottom: 1.5rem;">
@@ -546,109 +547,79 @@
     </div>
 
     <script>
-       // Gantilah URL di bawah ini dengan URL Deployment BARU kamu
-const API_URL = "URL_APPS_SCRIPT_BARU_KAMU_BERAKHIRAN_EXEC";
+        // MASUKKAN URL GOOGLE APPS SCRIPT KAMU DI DALAM TANDA PETIK DI BAWAH INI:
+        const API_URL = "https://script.google.com/macros/s/AKfycbxFYkv96C2PullSDx24ROR_DqWKT5Ha_X_qK1rNkapfgb0KJwJGKXTu7ehI0SuQMw/exec-";
 
-// FUNGSI SEND TO CLOUD YANG SUDAH DIPERBAIKI SINKRONISASINYA
-async function sendToCloud(action, payload) {
-    if (!API_URL || API_URL.includes("URL_APPS_SCRIPT")) {
-        alert("URL Google Apps Script belum dipasang!");
-        return;
-    }
-    try {
-        // Menggunakan method POST dengan blob agar diterima sempurna oleh Apps Script
-        await fetch(API_URL, {
-            method: "POST",
-            body: JSON.stringify({ action: action, data: payload, id: payload ? payload.id : null })
-        });
-        // Beri jeda 1.5 detik lalu refresh data otomatis
-        setTimeout(loadDataFromCloud, 1500);
-    } catch(err) {
-        console.error("Gagal mengirim data:", err);
-    }
-}
+        const defaultArmadaNames = ["Tomtom", "Basir", "Sitoen", "Abi"];
+        let armadaList = [...defaultArmadaNames];
+        let orders = [];
+        let photos = [];
+        let serverAdminPassword = "nyentrix123";
+        let isAdmin = false;
+        let currentDate = new Date();
+        let lastDataHash = "";
 
-// FUNGSI RENDER KALENDER YANG SUDAH DIPERBAIKI WARNA & COCOK TANGGALNYA
-function renderCalendar() {
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
-
-    const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-    document.getElementById('calendar-title').innerText = `${monthNames[month]} ${year}`;
-
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const prevMonthDays = new Date(year, month, 0).getDate();
-
-    const calendarBody = document.getElementById('calendar-body');
-    calendarBody.innerHTML = '';
-
-    // Tanggal Bulan Lalu
-    for (let i = firstDay - 1; i >= 0; i--) {
-        let cell = document.createElement('div');
-        cell.className = 'calendar-day-cell other-month';
-        cell.innerHTML = `<span class="day-number">${prevMonthDays - i}</span>`;
-        calendarBody.appendChild(cell);
-    }
-
-    // Tanggal Bulan Ini
-    const today = new Date();
-    for (let day = 1; day <= daysInMonth; day++) {
-        let cell = document.createElement('div');
-        cell.className = 'calendar-day-cell';
-        
-        if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-            cell.classList.add('today');
-        }
-
-        // Format tanggal YYYY-MM-DD
-        let dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        
-        let dayNum = document.createElement('span');
-        dayNum.className = 'day-number';
-        dayNum.innerText = day;
-        cell.appendChild(dayNum);
-
-        // Filter jadwal yang cocok dengan tanggal hari ini
-        let dayOrders = orders.filter(o => {
-            if(!o.tanggal) return false;
-            // Potong jika ada jam/format ISO (misal 2026-08-12T00:00:00)
-            let cleanDate = o.tanggal.split('T')[0].trim();
-            return cleanDate === dateString;
-        });
-
-        dayOrders.forEach(ord => {
-            // Konversi armadaIndex ke Integer agar class warna .armada-0, .armada-1, dll terbaca
-            let idx = parseInt(ord.armadaIndex) || 0;
-            let namaArmada = armadaList[idx] || `Armada ${idx + 1}`;
-            
-            let chip = document.createElement('div');
-            // Menentukan class warna berdasarkan index armada (0: Biru, 1: Hijau, 2: Ungu, 3: Oranye)
-            chip.className = `event-chip armada-${idx % 4}`;
-            chip.innerText = `${namaArmada} (${ord.tujuan})`;
-            chip.title = `${namaArmada}\nTujuan: ${ord.tujuan}\nJemput: ${ord.lokasi}`;
-            
-            if (isAdmin) {
-                chip.onclick = () => hapusOrder(ord.id);
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedTheme = localStorage.getItem('nyentrix_theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('themeIcon').innerText = '☀️';
+                document.getElementById('themeText').innerText = 'Light';
             }
-            cell.appendChild(chip);
+            populateArmadaDropdowns();
+            renderCalendar();
+            renderLegend();
+
+            loadDataFromCloud();
+            // Melakukan pemeriksaan sinkronisasi otomatis ke Google Sheets tiap 4 detik
+            setInterval(loadDataFromCloud, 4000);
         });
 
-        calendarBody.appendChild(cell);
-    }
+        async function loadDataFromCloud() {
+            if (!API_URL || API_URL.includes("PASTE_URL")) return;
+            try {
+                const res = await fetch(API_URL);
+                const data = await res.json();
 
-    // Sisa Grid Bulan Depan
-    let totalCells = firstDay + daysInMonth;
-    let nextDays = 7 - (totalCells % 7);
-    if (nextDays < 7) {
-        for (let j = 1; j <= nextDays; j++) {
-            let cell = document.createElement('div');
-            cell.className = 'calendar-day-cell other-month';
-            cell.innerHTML = `<span class="day-number">${j}</span>`;
-            calendarBody.appendChild(cell);
+                const currentHash = JSON.stringify(data);
+                if (currentHash === lastDataHash) return;
+                lastDataHash = currentHash;
+
+                if (data.armada && data.armada.length === 4) {
+                    armadaList = data.armada;
+                }
+                if (data.adminPass) {
+                    serverAdminPassword = data.adminPass;
+                }
+                orders = data.orders || [];
+                photos = data.photos || [];
+
+                populateArmadaDropdowns();
+                renderCalendar();
+                renderLegend();
+                renderOrder();
+                renderGallery();
+            } catch (err) {
+                console.error("Gagal sinkronkan data:", err);
+            }
         }
-    }
-}
+
+        async function sendToCloud(action, payload) {
+            if (!API_URL || API_URL.includes("PASTE_URL")) {
+                alert("URL Google Apps Script belum dipasang!");
+                return;
+            }
+            try {
+                await fetch(API_URL, {
+                    method: "POST",
+                    body: JSON.stringify({ action: action, data: payload, id: payload ? payload.id : null })
+                });
+                setTimeout(loadDataFromCloud, 1200);
+            } catch(err) {
+                console.error("Gagal kirim data:", err);
+            }
+        }
+
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
@@ -714,7 +685,7 @@ function renderCalendar() {
             renderLegend();
             
             sendToCloud("saveArmada", newNames);
-            alert('Nama armada berhasil diperbarui ke seluruh device!');
+            alert('Nama armada berhasil diperbarui!');
         }
 
         function simpanPasswordBaru() {
@@ -815,10 +786,16 @@ function renderCalendar() {
                 dayNum.innerText = day;
                 cell.appendChild(dayNum);
 
-                let dayOrders = orders.filter(o => o.tanggal === dateString);
+                // Filter tanggalan dengan penanganan string yang kuat
+                let dayOrders = orders.filter(o => {
+                    if(!o.tanggal) return false;
+                    let cleanDate = String(o.tanggal).split('T')[0].trim();
+                    return cleanDate === dateString;
+                });
+
                 dayOrders.forEach(ord => {
-                    let idx = ord.armadaIndex || 0;
-                    let namaArmada = armadaList[idx] || `Armada ${parseInt(idx)+1}`;
+                    let idx = parseInt(ord.armadaIndex) || 0;
+                    let namaArmada = armadaList[idx] || `Armada ${idx + 1}`;
                     
                     let chip = document.createElement('div');
                     chip.className = `event-chip armada-${idx % 4}`;
@@ -894,7 +871,7 @@ function renderCalendar() {
                 return;
             }
             if(confirm('Yakin ingin menghapus jadwal ini?')) {
-                orders = orders.filter(o => o.id != id);
+                orders = orders.filter(o => String(o.id) !== String(id));
                 sendToCloud("deleteOrder", { id: id });
                 renderCalendar();
                 renderOrder();
@@ -906,7 +883,7 @@ function renderCalendar() {
             let container = document.getElementById('list-order-detail');
             container.innerHTML = '';
 
-            let filtered = filter === 'semua' ? orders : orders.filter(o => o.armadaIndex == filter);
+            let filtered = filter === 'semua' ? orders : orders.filter(o => String(o.armadaIndex) === String(filter));
 
             if(filtered.length === 0) {
                 container.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">Tidak ada detail order untuk armada ini.</p>';
@@ -916,11 +893,11 @@ function renderCalendar() {
             filtered.forEach(ord => {
                 let div = document.createElement('div');
                 div.className = 'card';
-                let idx = ord.armadaIndex || 0;
-                let namaArmada = armadaList[idx] || `Armada ${parseInt(idx)+1}`;
+                let idx = parseInt(ord.armadaIndex) || 0;
+                let namaArmada = armadaList[idx] || `Armada ${idx + 1}`;
 
                 let deleteBtnHtml = isAdmin 
-                    ? `<button class="btn-delete" onclick="hapusOrder(${ord.id})">🗑️ Hapus Jadwal</button>` 
+                    ? `<button class="btn-delete" onclick="hapusOrder('${ord.id}')">🗑️ Hapus Jadwal</button>` 
                     : '';
 
                 div.innerHTML = `
@@ -978,8 +955,8 @@ function renderCalendar() {
             photos.forEach(p => {
                 let div = document.createElement('div');
                 div.className = 'gallery-item card';
-                let idx = p.armadaIndex || 0;
-                let namaArmada = armadaList[idx] || `Armada ${parseInt(idx)+1}`;
+                let idx = parseInt(p.armadaIndex) || 0;
+                let namaArmada = armadaList[idx] || `Armada ${idx + 1}`;
 
                 div.innerHTML = `
                     <img src="${p.url}">
