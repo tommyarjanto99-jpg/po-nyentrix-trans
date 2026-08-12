@@ -547,7 +547,7 @@
 
     <script>
         // PASTE URL APPS SCRIPT ANDA DI SINI
-        const API_URL = "https://script.google.com/macros/s/AKfycbzp0Mg7XeisATPkqA_08jL8eKTsg0RRHXvrenRSgkENsDE8_D7oeEP3-KRy50bBKjA/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbxFYkv96C2PullSDx24ROR_DqWKT5Ha_X_qK1rNkapfgb0KJwJGKXTu7ehI0SuQMw/exec-KRy50bBKjA/exec";
 
         const defaultArmadaNames = ["Tomtom", "Basir", "Sitoen", "Abi"];
         let armadaList = [...defaultArmadaNames];
@@ -575,7 +575,7 @@
         });
 
         async function loadDataFromCloud() {
-            if (!API_URL || API_URL.includes("PASTE_URL")) return;
+            if (!API_URL || API_URL.includes("https://script.google.com/macros/s/AKfycbxFYkv96C2PullSDx24ROR_DqWKT5Ha_X_qK1rNkapfgb0KJwJGKXTu7ehI0SuQMw/exec-KRy50bBKjA/exec")) return;
             try {
                 const res = await fetch(API_URL);
                 const data = await res.json();
@@ -605,7 +605,7 @@
         }
 
         function sendToCloud(action, payload) {
-            if (!API_URL || API_URL.includes("PASTE_URL")) {
+            if (!API_URL || API_URL.includes("https://script.google.com/macros/s/AKfycbxFYkv96C2PullSDx24ROR_DqWKT5Ha_X_qK1rNkapfgb0KJwJGKXTu7ehI0SuQMw/exec-KRy50bBKjA/exec")) {
                 alert("URL Google Apps Script belum dipasang!");
                 return;
             }
