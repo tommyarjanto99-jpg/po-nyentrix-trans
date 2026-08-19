@@ -478,7 +478,8 @@
                 <input type="text" id="input-lokasi" placeholder="Contoh: Garasi PO Nyentrix">
 
                 <label style="font-size:0.8rem;"><b>Jam Jemput:</b></label>
-                <input type="time" id="input-jam">
+                <!-- DIBUAT MANUAL BISA TEXT BIASA TERHINDAR DARI ERROR -->
+                <input type="text" id="input-jam" placeholder="Contoh: 07:00 WIB / Jam 7 Pagi">
 
                 <label style="font-size:0.8rem;"><b>Nilai Sewa (Rp):</b></label>
                 <input type="number" id="input-harga" placeholder="Contoh: 3500000">
@@ -839,6 +840,7 @@
             
             document.getElementById('input-tujuan').value = '';
             document.getElementById('input-lokasi').value = '';
+            document.getElementById('input-jam').value = '';
             document.getElementById('input-harga').value = '';
             document.getElementById('input-catatan').value = '';
             
