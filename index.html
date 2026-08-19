@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PO NYENTRIX TRANS - Manajemen Armada</title>
-    <!-- Font Google Inter, Great Vibes (Script Font) & Cinzel -->
+    <!-- Font Google Inter, Great Vibes & Cinzel -->
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600;700;800&family=Cinzel:wght@800;900&display=swap" rel="stylesheet">
     <style>
-        /* Import LHF Convecta Font / Fallback Style */
         @font-face {
             font-family: 'LHF Convecta';
             src: local('LHF Convecta Base'), local('LHF Convecta'), local('Cinzel-Black');
@@ -20,13 +19,12 @@
             --card: #ffffff;
             --text: #0f172a;
             --text-muted: #64748b;
-            --border: #e2e8f0;
+            --border: #cbd5e1;
             --admin-bg: #fffbeb;
             --admin-border: #f59e0b;
-            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
-        /* Dark Mode Variabel */
         body.dark-mode {
             --primary: #3b82f6;
             --secondary: #60a5fa;
@@ -37,7 +35,7 @@
             --border: #334155;
             --admin-bg: #451a03;
             --admin-border: #d97706;
-            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         body {
@@ -52,23 +50,19 @@
         .container {
             max-width: 900px;
             margin: 0 auto 2rem auto;
-            padding: 1rem 1rem;
+            padding: 1rem;
         }
 
-        /* DASHBOARD MENU CAPSULE STYLE (TERATAS) */
+        /* DASHBOARD MENU CAPSULE */
         .dashboard-nav {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             margin-bottom: 1.5rem;
-            position: relative;
-            z-index: 10;
         }
 
         @media (max-width: 600px) {
-            .dashboard-nav {
-                grid-template-columns: 1fr;
-            }
+            .dashboard-nav { grid-template-columns: 1fr; }
         }
 
         .nav-card {
@@ -80,109 +74,95 @@
             align-items: center;
             gap: 14px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             box-shadow: var(--card-shadow);
         }
 
-        .nav-card:hover {
-            transform: translateY(-3px);
-        }
+        .nav-card:hover { transform: translateY(-2px); }
 
         .nav-card .icon-circle {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: white;
             flex-shrink: 0;
-            box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 4px 10px rgba(0,0,0,0.15);
-            border: 3px solid #ffffff;
+            border: 2px solid #ffffff;
         }
-
-        body.dark-mode .nav-card .icon-circle { border-color: var(--card); }
 
         .card-menu-1 .icon-circle { background: linear-gradient(135deg, #ec4899, #db2777); }
         .card-menu-2 .icon-circle { background: linear-gradient(135deg, #06b6d4, #0891b2); }
         .card-menu-3 .icon-circle { background: linear-gradient(135deg, #84cc16, #65a30d); }
         .card-menu-4 .icon-circle { background: linear-gradient(135deg, #f97316, #ea580c); }
 
-        .card-menu-1.active { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
-        .card-menu-2.active { background: linear-gradient(135deg, #cffaff, #a5f3fc); }
-        .card-menu-3.active { background: linear-gradient(135deg, #ecfccb, #d9f99d); }
-        .card-menu-4.active { background: linear-gradient(135deg, #ffedd5, #fed7aa); }
+        .card-menu-1.active { background: #fce7f3; }
+        .card-menu-2.active { background: #cffaff; }
+        .card-menu-3.active { background: #ecfccb; }
+        .card-menu-4.active { background: #ffedd5; }
 
         body.dark-mode .card-menu-1.active { background: #831843; }
         body.dark-mode .card-menu-2.active { background: #164e63; }
         body.dark-mode .card-menu-3.active { background: #365314; }
         body.dark-mode .card-menu-4.active { background: #7c2d12; }
 
-        .nav-card .info .title { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+        .nav-card .info .title { font-size: 0.9rem; font-weight: 700; }
         .nav-card .info .subtitle { font-size: 0.75rem; color: var(--text-muted); }
 
-        /* HEADER BANNER */
+        /* HEADER */
         header {
             background: linear-gradient(135deg, #1e3a8a, #2563eb);
             color: white;
-            padding: 2.2rem 1.2rem;
+            padding: 1.8rem 1rem;
             text-align: center;
             position: relative;
-            border-radius: 20px;
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+            border-radius: 16px;
             margin-bottom: 1.5rem;
         }
 
         header h2 {
             margin: 0;
-            font-family: 'LHF Convecta', 'Cinzel', 'Georgia', serif;
-            font-size: 2.2rem;
+            font-family: 'LHF Convecta', 'Cinzel', serif;
+            font-size: 2rem;
             font-weight: 900;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             text-transform: uppercase;
-            text-shadow: 2px 3px 6px rgba(0, 0, 0, 0.4);
         }
 
         header p.slogan {
-            margin: 6px 0 0 0;
-            font-family: 'Great Vibes', 'Brush Script MT', cursive;
-            font-size: 1.8rem;
-            font-weight: 400;
+            margin: 4px 0 0 0;
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.6rem;
             color: #fef08a;
-            letter-spacing: 1px;
-            text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .theme-toggle {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            top: 0.8rem;
+            right: 0.8rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
             color: white;
             padding: 0.4rem 0.8rem;
-            border-radius: 30px;
+            border-radius: 20px;
             cursor: pointer;
             font-size: 0.8rem;
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            backdrop-filter: blur(8px);
         }
 
         .card {
             background: var(--card);
-            border-radius: 16px;
-            padding: 1.25rem;
+            border-radius: 12px;
+            padding: 1rem;
             margin-bottom: 1rem;
             box-shadow: var(--card-shadow);
             border: 1px solid var(--border);
         }
 
-        /* KALENDER GRID STYLE */
+        /* KALENDER GRID TAMPILAN SEPERTI GAMBAR CONTOH */
         .calendar-header {
             display: flex;
             justify-content: space-between;
@@ -190,18 +170,14 @@
             margin-bottom: 1rem;
         }
 
-        .calendar-header h3 {
-            margin: 0;
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
+        .calendar-header h3 { margin: 0; font-size: 1.2rem; font-weight: 700; }
 
         .calendar-nav-btn {
             background: var(--bg);
             border: 1px solid var(--border);
             color: var(--text);
             padding: 0.4rem 0.8rem;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
         }
@@ -209,56 +185,63 @@
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            text-align: center;
+            gap: 2px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
         }
 
         .calendar-day-head {
-            font-size: 0.8rem;
+            background: var(--card);
+            font-size: 0.75rem;
             font-weight: 700;
-            padding: 6px 0;
+            padding: 8px 0;
+            text-align: center;
             color: var(--text-muted);
-            border-bottom: 1px solid var(--border);
         }
 
         .calendar-day-cell {
-            min-height: 85px;
-            background: var(--bg);
-            border-radius: 8px;
+            background: var(--card);
+            min-height: 95px;
             padding: 4px;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            border: 1px solid transparent;
-            overflow: hidden;
+            gap: 2px;
         }
 
         .calendar-day-cell.other-month {
-            opacity: 0.35;
+            background: var(--bg);
+            opacity: 0.4;
         }
 
         .calendar-day-cell .day-number {
             font-size: 0.8rem;
             font-weight: 700;
-            margin-bottom: 4px;
-            align-self: flex-end;
+            text-align: center;
+            margin-bottom: 2px;
             color: var(--text);
         }
 
-        .calendar-day-cell.today {
-            border-color: var(--primary);
-            background: rgba(37, 99, 235, 0.05);
+        /* Lingkaran Biru Tanda Hari Ini (Sesuai Gambar) */
+        .calendar-day-cell.today .day-number {
+            background: #0284c7;
+            color: white;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            line-height: 22px;
+            margin: 0 auto 2px auto;
         }
 
-        /* Label Event Armada Berwarna di Kalender */
+        /* BAR JADWAL KALENDER (EVENT CHIP) */
         .event-chip {
             width: 100%;
-            font-size: 0.68rem;
-            padding: 2px 4px;
-            border-radius: 4px;
-            margin-bottom: 2px;
-            color: white;
+            font-size: 0.7rem;
+            padding: 3px 5px;
+            border-radius: 3px;
+            color: #0f172a;
             font-weight: 600;
             text-align: left;
             white-space: nowrap;
@@ -266,19 +249,35 @@
             text-overflow: ellipsis;
             box-sizing: border-box;
             cursor: pointer;
+            line-height: 1.2;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
 
-        .event-chip.armada-0 { background-color: #2563eb; } /* Biru */
-        .event-chip.armada-1 { background-color: #10b981; } /* Hijau */
-        .event-chip.armada-2 { background-color: #8b5cf6; } /* Ungu */
-        .event-chip.armada-3 { background-color: #f97316; } /* Oranye */
+        /* Skema Warna Armada Sesuai Gambar Contoh */
+        .event-chip.armada-0 { background-color: #d8b4fe; color: #4c1d95; } /* Ungu Muda (Tomtom) */
+        .event-chip.armada-1 { background-color: #bbf7d0; color: #14532d; } /* Hijau Muda (Basir) */
+        .event-chip.armada-2 { background-color: #fef08a; color: #713f12; } /* Kuning Muda (Sitoen) */
+        .event-chip.armada-3 { background-color: #fecdd3; color: #881337; } /* Merah Muda (Abi) */
+
+        .badge-legend {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .badge-legend.armada-0 { background-color: #d8b4fe; color: #4c1d95; }
+        .badge-legend.armada-1 { background-color: #bbf7d0; color: #14532d; }
+        .badge-legend.armada-2 { background-color: #fef08a; color: #713f12; }
+        .badge-legend.armada-3 { background-color: #fecdd3; color: #881337; }
 
         input, select, textarea {
             width: 100%;
-            padding: 0.75rem 1rem;
+            padding: 0.75rem;
             margin: 0.4rem 0 1rem 0;
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: 8px;
             box-sizing: border-box;
             background-color: var(--bg);
             color: var(--text);
@@ -290,29 +289,26 @@
             display: flex;
             align-items: center;
         }
-
         .password-wrapper input { padding-right: 45px; margin: 0; }
-
         .toggle-pwd-btn {
             position: absolute;
-            right: 12px;
+            right: 10px;
             background: none;
             border: none;
             cursor: pointer;
             font-size: 1.1rem;
-            color: var(--text-muted);
         }
 
         button.btn {
             background: var(--primary);
             color: white;
             border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 10px;
+            padding: 0.75rem 1.2rem;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
             width: 100%;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .btn-delete {
@@ -320,41 +316,18 @@
             color: white;
             border: none;
             padding: 0.4rem 0.8rem;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 0.8rem;
             font-weight: 600;
-            margin-top: 10px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .btn-delete:hover {
-            background: #b91c1c;
+            margin-top: 8px;
         }
 
         .admin-panel {
             background: var(--admin-bg);
             border: 1px solid var(--admin-border);
-            padding: 1rem;
             border-radius: 12px;
-            margin-bottom: 1rem;
         }
-
-        .badge {
-            padding: 0.35rem 0.7rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: white;
-            display: inline-block;
-        }
-
-        .armada-0 { background: #2563eb; }
-        .armada-1 { background: #10b981; }
-        .armada-2 { background: #8b5cf6; }
-        .armada-3 { background: #f97316; }
 
         .hidden { display: none; }
 
@@ -383,7 +356,7 @@
 
     <div class="container">
 
-        <!-- MENU NAVIGASI KAPUSUL TERATAS -->
+        <!-- NAVIGASI KAPSUL -->
         <div class="dashboard-nav">
             <div class="nav-card card-menu-1 active" onclick="switchTab('jadwal', this)">
                 <div class="icon-circle">01</div>
@@ -418,7 +391,7 @@
             </div>
         </div>
 
-        <!-- HEADER BANNER PO NYENTRIX TRANS -->
+        <!-- HEADER BANNER -->
         <header>
             <button id="themeToggle" class="theme-toggle" onclick="toggleDarkMode()">
                 <span id="themeIcon">🌙</span> <span id="themeText">Dark</span>
@@ -427,14 +400,14 @@
             <p class="slogan">Service Is Our Priority</p>
         </header>
 
-        <div id="loading-indicator" class="hidden">🔄 Menghubungkan ke Database...</div>
+        <div id="loading-indicator" class="hidden">🔄 Menghubungkan ke Database Google Sheets...</div>
 
-        <!-- MENU 1: LIHAT JADWAL -->
+        <!-- TAB 1: LIHAT JADWAL KALENDER -->
         <div id="tab-jadwal" class="tab-content">
             <div class="card">
                 <div class="calendar-header">
                     <button class="calendar-nav-btn" onclick="prevMonth()">&lt; Prev</button>
-                    <h3 id="calendar-title">Juni 2026</h3>
+                    <h3 id="calendar-title">Agustus 2026</h3>
                     <button class="calendar-nav-btn" onclick="nextMonth()">Next &gt;</button>
                 </div>
 
@@ -448,26 +421,24 @@
                     <div class="calendar-day-head">Sab</div>
                 </div>
                 
-                <div class="calendar-grid" id="calendar-body" style="margin-top: 4px;">
-                    <!-- Grid tanggal di-render via Javascript -->
-                </div>
+                <div class="calendar-grid" id="calendar-body"></div>
             </div>
             
-            <!-- Legenda Warna Armada -->
-            <div class="card" style="padding: 0.8rem 1.2rem;">
-                <div style="font-size: 0.8rem; font-weight: 700; margin-bottom: 6px;">Keterangan Warna Armada:</div>
+            <!-- LEGENDA WARNA ARMADA -->
+            <div class="card" style="padding: 0.8rem 1rem;">
+                <div style="font-size: 0.8rem; font-weight: 700; margin-bottom: 8px;">Warna Armada:</div>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;" id="legend-container"></div>
             </div>
         </div>
 
-        <!-- MENU 2: TAMBAH JADWAL & LOGIN ADMIN -->
+        <!-- TAB 2: TAMBAH JADWAL & ADMIN -->
         <div id="tab-tambah" class="tab-content hidden">
             <div class="card admin-panel">
                 <p id="admin-status" style="margin-top:0;">Status: <b>User (Viewer)</b></p>
                 <div id="login-section">
                     <div class="password-wrapper" style="margin-bottom: 0.8rem;">
                         <input type="password" id="admin-pass" placeholder="Password Admin...">
-                        <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility()" title="Tampilkan/Sembunyikan Password">👁️</button>
+                        <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility()">👁️</button>
                     </div>
                     <button class="btn" onclick="loginAdmin()">Login Admin</button>
                 </div>
@@ -478,12 +449,12 @@
 
             <div id="admin-only-notice" class="card">
                 <p style="text-align: center; color: #dc2626; font-weight: 600; margin: 0;">
-                    ⚠️ Silakan Login Admin terlebih dahulu di atas untuk menginput jadwal, menghapus order, atau mengubah nama armada.
+                    ⚠️ Silakan Login Admin terlebih dahulu untuk menginput jadwal atau mengelola armada.
                 </p>
             </div>
 
             <div id="form-admin-order" class="card hidden" style="border:1px solid #10b981;">
-                <h3 style="color:#10b981;">➕ Tambah Jadwal Baru</h3>
+                <h3 style="color:#10b981; margin-top:0;">➕ Tambah Jadwal Baru</h3>
                 
                 <label><b>Pilih Armada:</b></label>
                 <select id="input-armada"></select>
@@ -491,10 +462,10 @@
                 <label><b>Tanggal Berangkat:</b></label>
                 <input type="date" id="input-tanggal">
 
-                <label><b>Tujuan:</b></label>
-                <input type="text" id="input-tujuan" placeholder="Contoh: Jogja / Bali / Bandung">
+                <label><b>Tujuan / Nama Penyewa:</b></label>
+                <input type="text" id="input-tujuan" placeholder="Contoh: Jogja / Pak Danar">
 
-                <label><b>Penjemputan:</b></label>
+                <label><b>Lokasi Penjemputan:</b></label>
                 <input type="text" id="input-lokasi" placeholder="Contoh: Garasi PO Nyentrix">
 
                 <label><b>Jam Jemput:</b></label>
@@ -503,27 +474,25 @@
                 <label><b>Nilai Sewa (Rp):</b></label>
                 <input type="number" id="input-harga" placeholder="Contoh: 3500000">
 
-                <label><b>Catatan / Fasilitas:</b></label>
+                <label><b>Catatan / Keterangan:</b></label>
                 <textarea id="input-catatan" placeholder="Keterangan tambahan..."></textarea>
 
                 <button class="btn" id="btn-simpan" style="background:#10b981;" onclick="simpanData()">Simpan Jadwal Order</button>
             </div>
 
             <div id="form-custom-armada" class="card hidden">
-                <h3>⚙️ Pengaturan Nama Armada</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Ubah nama armada kustom PO Nyentrix Trans:</p>
-                
+                <h3 style="margin-top:0;">⚙️ Pengaturan Nama Armada</h3>
                 <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <label><b>Armada 1 (Biru):</b></label>
+                    <label><b>Armada 1 (Ungu):</b></label>
                     <input type="text" id="rename-armada-0">
 
                     <label><b>Armada 2 (Hijau):</b></label>
                     <input type="text" id="rename-armada-1">
 
-                    <label><b>Armada 3 (Ungu):</b></label>
+                    <label><b>Armada 3 (Kuning):</b></label>
                     <input type="text" id="rename-armada-2">
 
-                    <label><b>Armada 4 (Oranye):</b></label>
+                    <label><b>Armada 4 (Merah Muda):</b></label>
                     <input type="text" id="rename-armada-3">
 
                     <button class="btn" style="background:#059669; margin-top: 8px;" onclick="simpanNamaArmada()">Simpan Nama Armada</button>
@@ -531,22 +500,22 @@
             </div>
         </div>
 
-        <!-- MENU 3: DETAIL ORDER -->
+        <!-- TAB 3: DETAIL ORDER -->
         <div id="tab-order" class="tab-content hidden">
             <div class="card">
-                <h3>📋 Detail Order Berdasarkan Armada</h3>
+                <h3 style="margin-top:0;">📋 Detail Order Berdasarkan Armada</h3>
                 <label><b>Filter Armada:</b></label>
                 <select id="filter-armada" onchange="renderOrder()"></select>
                 <div id="list-order-detail" style="margin-top: 1rem;"></div>
             </div>
         </div>
 
-        <!-- MENU 4: FOTO TRIP -->
+        <!-- TAB 4: FOTO TRIP -->
         <div id="tab-foto" class="tab-content hidden">
             <div class="card">
-                <h3>📷 Laporan Foto Trip Armada</h3>
-                <div id="form-foto-admin" class="hidden" style="margin-bottom: 1.5rem; border-bottom: 1px border var(--border); padding-bottom: 1rem;">
-                    <label><b>Pilih Armada Trip:</b></label>
+                <h3 style="margin-top:0;">📷 Laporan Foto Trip Armada</h3>
+                <div id="form-foto-admin" class="hidden" style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
+                    <label><b>Pilih Armada:</b></label>
                     <select id="foto-armada"></select>
                     <label><b>Upload Foto:</b></label>
                     <input type="file" id="input-file-foto" accept="image/*">
@@ -561,7 +530,6 @@
     </div>
 
     <script>
-        // URL Web App Google Apps Script PO NYENTRIX TRANS
         const API_URL = "https://script.google.com/macros/s/AKfycbwqBTGPdtUMp7RTOu5V31E8IuD2rt8bbtqFAUFsyj2v3RW5tFCals6-NFBZqNYyG1QY/exec";
 
         const defaultArmadaNames = ["Tomtom", "Basir", "Sitoen", "Abi"];
@@ -589,13 +557,30 @@
             else loader.classList.add('hidden');
         }
 
+        // FUNGSI UNTUK MENYAMAKAN FORMAT TANGGAL (YYYY-MM-DD)
+        function formatDateStandard(dateStr) {
+            if (!dateStr) return '';
+            let d = new Date(dateStr);
+            if (isNaN(d.getTime())) {
+                let parts = dateStr.split('-');
+                if (parts.length === 3) {
+                    return `${parts[0]}-${String(parts[1]).padStart(2, '0')}-${String(parts[2]).padStart(2, '0')}`;
+                }
+                return dateStr;
+            }
+            let year = d.getFullYear();
+            let month = String(d.getMonth() + 1).padStart(2, '0');
+            let day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
         async function muatDataRealtime() {
             showLoading(true);
             try {
                 let response = await fetch(API_URL);
                 orders = await response.json();
             } catch (err) {
-                console.error("Gagal memuat data dari database Google Sheets:", err);
+                console.error("Gagal memuat data:", err);
             } finally {
                 showLoading(false);
                 renderCalendar();
@@ -664,7 +649,7 @@
             populateArmadaDropdowns();
             renderCalendar();
             renderLegend();
-            alert('Nama armada berhasil diperbarui!');
+            alert('Nama armada berhasil disimpan!');
         }
 
         function renderLegend() {
@@ -672,9 +657,7 @@
             legContainer.innerHTML = '';
             armadaList.forEach((armada, idx) => {
                 legContainer.innerHTML += `
-                    <div style="display:flex; align-items:center; gap:4px; font-size:0.75rem;">
-                        <span class="badge armada-${idx % 4}" style="padding:2px 6px;">${armada}</span>
-                    </div>
+                    <span class="badge-legend armada-${idx % 4}">${armada}</span>
                 `;
             });
         }
@@ -694,7 +677,7 @@
                 
                 renderCalendar();
                 renderOrder();
-                alert('Berhasil Login sebagai Admin!');
+                alert('Berhasil Login Admin!');
             } else {
                 alert('Password Salah!');
             }
@@ -716,6 +699,7 @@
             alert('Berhasil Logout.');
         }
 
+        // FUNGSI RENDER KALENDER LENGKAP
         function renderCalendar() {
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
@@ -730,6 +714,7 @@
             const calendarBody = document.getElementById('calendar-body');
             calendarBody.innerHTML = '';
 
+            // Tanggal Bulan Lalu
             for (let i = firstDay - 1; i >= 0; i--) {
                 let cell = document.createElement('div');
                 cell.className = 'calendar-day-cell other-month';
@@ -737,6 +722,7 @@
                 calendarBody.appendChild(cell);
             }
 
+            // Tanggal Bulan Ini
             const today = new Date();
             for (let day = 1; day <= daysInMonth; day++) {
                 let cell = document.createElement('div');
@@ -746,22 +732,25 @@
                     cell.classList.add('today');
                 }
 
-                let dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                let targetDateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 
                 let dayNum = document.createElement('span');
                 dayNum.className = 'day-number';
                 dayNum.innerText = day;
                 cell.appendChild(dayNum);
 
-                let dayOrders = orders.filter(o => o.tanggal === dateString);
+                // CARI ORDER UNTUK HARI INI
+                let dayOrders = orders.filter(o => formatDateStandard(o.tanggal) === targetDateStr);
+
                 dayOrders.forEach(ord => {
-                    let idx = ord.armadaIndex || 0;
-                    let namaArmada = armadaList[idx] || `Armada ${parseInt(idx)+1}`;
-                    
+                    let idx = parseInt(ord.armadaIndex) || 0;
+                    let namaArmada = armadaList[idx] || `Armada ${idx + 1}`;
+                    let labelTeks = ord.tujuan ? `${namaArmada} ${ord.tujuan}` : namaArmada;
+
                     let chip = document.createElement('div');
                     chip.className = `event-chip armada-${idx % 4}`;
-                    chip.innerText = `${namaArmada} (${ord.tujuan})`;
-                    chip.title = `${namaArmada}\nTujuan: ${ord.tujuan}\nJemput: ${ord.lokasi}`;
+                    chip.innerText = labelTeks;
+                    chip.title = `${namaArmada}\nDetail: ${ord.tujuan || '-'}\nJemput: ${ord.lokasi || '-'}`;
                     
                     if (isAdmin) {
                         chip.onclick = () => hapusOrder(ord.id);
@@ -772,6 +761,7 @@
                 calendarBody.appendChild(cell);
             }
 
+            // Tanggal Bulan Depan
             let totalCells = firstDay + daysInMonth;
             let nextDays = 7 - (totalCells % 7);
             if (nextDays < 7) {
@@ -795,10 +785,11 @@
         }
 
         async function simpanData() {
+            let inputDate = document.getElementById('input-tanggal').value;
             let newOrder = {
                 id: Date.now(),
                 armadaIndex: document.getElementById('input-armada').value,
-                tanggal: document.getElementById('input-tanggal').value,
+                tanggal: formatDateStandard(inputDate),
                 tujuan: document.getElementById('input-tujuan').value,
                 lokasi: document.getElementById('input-lokasi').value,
                 jam: document.getElementById('input-jam').value,
@@ -806,8 +797,8 @@
                 catatan: document.getElementById('input-catatan').value
             };
 
-            if(!newOrder.tanggal || !newOrder.tujuan) {
-                alert('Tanggal dan Tujuan wajib diisi!');
+            if(!newOrder.tanggal) {
+                alert('Silakan pilih tanggal berangkat!');
                 return;
             }
 
@@ -821,7 +812,7 @@
                 await muatDataRealtime();
                 alert('Jadwal berhasil disimpan!');
             } catch (e) {
-                alert("Gagal menyimpan ke database Google Sheets.");
+                alert("Gagal menyimpan ke database.");
             } finally {
                 showLoading(false);
             }
@@ -836,10 +827,7 @@
         }
 
         async function hapusOrder(id) {
-            if(!isAdmin) {
-                alert('Hanya Admin yang diizinkan untuk menghapus jadwal.');
-                return;
-            }
+            if(!isAdmin) return;
             if(confirm('Yakin ingin menghapus jadwal ini?')) {
                 showLoading(true);
                 try {
@@ -848,9 +836,9 @@
                         body: JSON.stringify({ action: "DELETE", id: id })
                     });
                     await muatDataRealtime();
-                    alert("Jadwal berhasil dihapus dari database.");
+                    alert("Jadwal berhasil dihapus.");
                 } catch (e) {
-                    alert("Gagal menghapus dari database.");
+                    alert("Gagal menghapus.");
                 } finally {
                     showLoading(false);
                 }
@@ -862,7 +850,7 @@
             let container = document.getElementById('list-order-detail');
             container.innerHTML = '';
 
-            let filtered = filter === 'semua' ? orders : orders.filter(o => o.armadaIndex == filter);
+            let filtered = filter === 'semua' ? orders : orders.filter(o => parseInt(o.armadaIndex) == filter);
 
             if(filtered.length === 0) {
                 container.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">Tidak ada detail order untuk armada ini.</p>';
@@ -872,8 +860,8 @@
             filtered.forEach(ord => {
                 let div = document.createElement('div');
                 div.className = 'card';
-                let idx = ord.armadaIndex || 0;
-                let namaArmada = armadaList[idx] || `Armada ${parseInt(idx)+1}`;
+                let idx = parseInt(ord.armadaIndex) || 0;
+                let namaArmada = armadaList[idx] || `Armada ${idx + 1}`;
 
                 let deleteBtnHtml = isAdmin 
                     ? `<button class="btn-delete" onclick="hapusOrder(${ord.id})">🗑️ Hapus Jadwal</button>` 
@@ -881,15 +869,15 @@
 
                 div.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                        <span class="badge armada-${idx % 4}">${namaArmada}</span>
-                        <span style="font-weight:700; font-size:0.9rem;">📅 ${ord.tanggal}</span>
+                        <span class="badge-legend armada-${idx % 4}">${namaArmada}</span>
+                        <span style="font-weight:700; font-size:0.85rem;">📅 ${formatDateStandard(ord.tanggal)}</span>
                     </div>
-                    <ul style="padding-left:1.2rem; margin:0; font-size:0.9rem; line-height:1.6;">
-                        <li><b>Tujuan:</b> ${ord.tujuan}</li>
-                        <li><b>Penjemputan:</b> ${ord.lokasi}</li>
-                        <li><b>Jam Jemput:</b> ${ord.jam}</li>
-                        <li><b>Nilai Sewa:</b> Rp ${Number(ord.harga).toLocaleString()}</li>
-                        <li><b>Lain-lain:</b> ${ord.catatan || '-'}</li>
+                    <ul style="padding-left:1.2rem; margin:0; font-size:0.85rem; line-height:1.6;">
+                        <li><b>Tujuan/Penyewa:</b> ${ord.tujuan || '-'}</li>
+                        <li><b>Penjemputan:</b> ${ord.lokasi || '-'}</li>
+                        <li><b>Jam Jemput:</b> ${ord.jam || '-'}</li>
+                        <li><b>Nilai Sewa:</b> Rp ${ord.harga ? Number(ord.harga).toLocaleString() : '0'}</li>
+                        <li><b>Catatan:</b> ${ord.catatan || '-'}</li>
                     </ul>
                     ${deleteBtnHtml}
                 `;
@@ -934,13 +922,13 @@
             photos.forEach(p => {
                 let div = document.createElement('div');
                 div.className = 'gallery-item card';
-                let idx = p.armadaIndex || 0;
-                let namaArmada = armadaList[idx] || `Armada ${parseInt(idx)+1}`;
+                let idx = parseInt(p.armadaIndex) || 0;
+                let namaArmada = armadaList[idx] || `Armada ${idx + 1}`;
 
                 div.innerHTML = `
                     <img src="${p.url}">
                     <div style="margin-top:6px;">
-                        <span class="badge armada-${idx % 4}" style="font-size:0.7rem; padding:2px 6px;">${namaArmada}</span>
+                        <span class="badge-legend armada-${idx % 4}">${namaArmada}</span>
                         <p style="font-size:0.8rem; margin:4px 0 0 0;">${p.keterangan || ''}</p>
                     </div>
                 `;
