@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PO NYENTRIX TRANS - Manajemen Armada Realtime</title>
-    <!-- Font Google -->
+    <title>PO NYENTRIX TRANS - Manajemen Armada</title>
+    <!-- Font Google Inter, Great Vibes (Script Font) & Cinzel -->
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600;700;800&family=Cinzel:wght@800;900&display=swap" rel="stylesheet">
-    
-    <!-- Supabase JS Library CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <style>
+        /* Import LHF Convecta Font / Fallback Style */
         @font-face {
             font-family: 'LHF Convecta';
             src: local('LHF Convecta Base'), local('LHF Convecta'), local('Cinzel-Black');
@@ -29,6 +26,7 @@
             --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
         }
 
+        /* Dark Mode Variabel */
         body.dark-mode {
             --primary: #3b82f6;
             --secondary: #60a5fa;
@@ -57,6 +55,7 @@
             padding: 1rem 1rem;
         }
 
+        /* DASHBOARD MENU CAPSULE STYLE (TERATAS) */
         .dashboard-nav {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -67,7 +66,9 @@
         }
 
         @media (max-width: 600px) {
-            .dashboard-nav { grid-template-columns: 1fr; }
+            .dashboard-nav {
+                grid-template-columns: 1fr;
+            }
         }
 
         .nav-card {
@@ -83,7 +84,9 @@
             box-shadow: var(--card-shadow);
         }
 
-        .nav-card:hover { transform: translateY(-3px); }
+        .nav-card:hover {
+            transform: translateY(-3px);
+        }
 
         .nav-card .icon-circle {
             width: 44px;
@@ -120,6 +123,7 @@
         .nav-card .info .title { font-size: 0.95rem; font-weight: 700; color: var(--text); }
         .nav-card .info .subtitle { font-size: 0.75rem; color: var(--text-muted); }
 
+        /* HEADER BANNER */
         header {
             background: linear-gradient(135deg, #1e3a8a, #2563eb);
             color: white;
@@ -178,6 +182,7 @@
             border: 1px solid var(--border);
         }
 
+        /* KALENDER GRID STYLE */
         .calendar-header {
             display: flex;
             justify-content: space-between;
@@ -185,7 +190,11 @@
             margin-bottom: 1rem;
         }
 
-        .calendar-header h3 { margin: 0; font-size: 1.2rem; font-weight: 700; }
+        .calendar-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
 
         .calendar-nav-btn {
             background: var(--bg);
@@ -225,7 +234,9 @@
             overflow: hidden;
         }
 
-        .calendar-day-cell.other-month { opacity: 0.35; }
+        .calendar-day-cell.other-month {
+            opacity: 0.35;
+        }
 
         .calendar-day-cell .day-number {
             font-size: 0.8rem;
@@ -240,6 +251,7 @@
             background: rgba(37, 99, 235, 0.05);
         }
 
+        /* Label Event Armada Berwarna di Kalender */
         .event-chip {
             width: 100%;
             font-size: 0.68rem;
@@ -256,10 +268,10 @@
             cursor: pointer;
         }
 
-        .event-chip.armada-0 { background-color: #2563eb; }
-        .event-chip.armada-1 { background-color: #10b981; }
-        .event-chip.armada-2 { background-color: #8b5cf6; }
-        .event-chip.armada-3 { background-color: #f97316; }
+        .event-chip.armada-0 { background-color: #2563eb; } /* Biru */
+        .event-chip.armada-1 { background-color: #10b981; } /* Hijau */
+        .event-chip.armada-2 { background-color: #8b5cf6; } /* Ungu */
+        .event-chip.armada-3 { background-color: #f97316; } /* Oranye */
 
         input, select, textarea {
             width: 100%;
@@ -318,6 +330,10 @@
             gap: 4px;
         }
 
+        .btn-delete:hover {
+            background: #b91c1c;
+        }
+
         .admin-panel {
             background: var(--admin-bg);
             border: 1px solid var(--admin-border);
@@ -354,12 +370,20 @@
             object-fit: cover;
             border-radius: 8px;
         }
+
+        #loading-indicator {
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- MENU NAVIGASI KAPSEL -->
+
+        <!-- MENU NAVIGASI KAPUSUL TERATAS -->
         <div class="dashboard-nav">
             <div class="nav-card card-menu-1 active" onclick="switchTab('jadwal', this)">
                 <div class="icon-circle">01</div>
@@ -394,7 +418,7 @@
             </div>
         </div>
 
-        <!-- HEADER BANNER -->
+        <!-- HEADER BANNER PO NYENTRIX TRANS -->
         <header>
             <button id="themeToggle" class="theme-toggle" onclick="toggleDarkMode()">
                 <span id="themeIcon">🌙</span> <span id="themeText">Dark</span>
@@ -403,12 +427,14 @@
             <p class="slogan">Service Is Our Priority</p>
         </header>
 
+        <div id="loading-indicator" class="hidden">🔄 Menghubungkan ke Database...</div>
+
         <!-- MENU 1: LIHAT JADWAL -->
         <div id="tab-jadwal" class="tab-content">
             <div class="card">
                 <div class="calendar-header">
                     <button class="calendar-nav-btn" onclick="prevMonth()">&lt; Prev</button>
-                    <h3 id="calendar-title">Loading...</h3>
+                    <h3 id="calendar-title">Juni 2026</h3>
                     <button class="calendar-nav-btn" onclick="nextMonth()">Next &gt;</button>
                 </div>
 
@@ -422,23 +448,26 @@
                     <div class="calendar-day-head">Sab</div>
                 </div>
                 
-                <div class="calendar-grid" id="calendar-body" style="margin-top: 4px;"></div>
+                <div class="calendar-grid" id="calendar-body" style="margin-top: 4px;">
+                    <!-- Grid tanggal di-render via Javascript -->
+                </div>
             </div>
             
+            <!-- Legenda Warna Armada -->
             <div class="card" style="padding: 0.8rem 1.2rem;">
                 <div style="font-size: 0.8rem; font-weight: 700; margin-bottom: 6px;">Keterangan Warna Armada:</div>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;" id="legend-container"></div>
             </div>
         </div>
 
-        <!-- MENU 2: TAMBAH JADWAL -->
+        <!-- MENU 2: TAMBAH JADWAL & LOGIN ADMIN -->
         <div id="tab-tambah" class="tab-content hidden">
             <div class="card admin-panel">
                 <p id="admin-status" style="margin-top:0;">Status: <b>User (Viewer)</b></p>
                 <div id="login-section">
                     <div class="password-wrapper" style="margin-bottom: 0.8rem;">
                         <input type="password" id="admin-pass" placeholder="Password Admin...">
-                        <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility()">👁️</button>
+                        <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility()" title="Tampilkan/Sembunyikan Password">👁️</button>
                     </div>
                     <button class="btn" onclick="loginAdmin()">Login Admin</button>
                 </div>
@@ -477,7 +506,7 @@
                 <label><b>Catatan / Fasilitas:</b></label>
                 <textarea id="input-catatan" placeholder="Keterangan tambahan..."></textarea>
 
-                <button class="btn" style="background:#10b981;" onclick="simpanData()">Simpan Jadwal Order</button>
+                <button class="btn" id="btn-simpan" style="background:#10b981;" onclick="simpanData()">Simpan Jadwal Order</button>
             </div>
 
             <div id="form-custom-armada" class="card hidden">
@@ -516,7 +545,7 @@
         <div id="tab-foto" class="tab-content hidden">
             <div class="card">
                 <h3>📷 Laporan Foto Trip Armada</h3>
-                <div id="form-foto-admin" class="hidden" style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
+                <div id="form-foto-admin" class="hidden" style="margin-bottom: 1.5rem; border-bottom: 1px border var(--border); padding-bottom: 1rem;">
                     <label><b>Pilih Armada Trip:</b></label>
                     <select id="foto-armada"></select>
                     <label><b>Upload Foto:</b></label>
@@ -528,178 +557,51 @@
                 <div class="gallery-grid" id="gallery-container"></div>
             </div>
         </div>
+
     </div>
 
     <script>
-        // === INTEGRASI SUPABASE ===
-        const SUPABASE_URL = 'https://hjdfokszanmvgjucocbo.supabase.co/rest/v1';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhqZGZva3N6YW5tdmdqdWNvY2JvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY1Mzk3MjIsImV4cCI6MjEwMjExNTcyMn0.GiVx7WUIlPTVE0TMzXwCPgokjz7Nsk8CXsAYJ55viQk';
-        const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // URL Web App Google Apps Script PO NYENTRIX TRANS
+        const API_URL = "https://script.google.com/macros/s/AKfycbwqBTGPdtUMp7RTOu5V31E8IuD2rt8bbtqFAUFsyj2v3RW5tFCals6-NFBZqNYyG1QY/exec";
 
-        let armadaList = ["Tomtom", "Basir", "Sitoen", "Abi"];
+        const defaultArmadaNames = ["Tomtom", "Basir", "Sitoen", "Abi"];
+        let armadaList = JSON.parse(localStorage.getItem('nyentrix_armada_names')) || defaultArmadaNames;
         let orders = [];
-        let photos = [];
+        let photos = JSON.parse(localStorage.getItem('nyentrix_photos')) || [];
         let isAdmin = false;
         let currentDate = new Date();
 
-        document.addEventListener("DOMContentLoaded", async () => {
+        document.addEventListener("DOMContentLoaded", () => {
             const savedTheme = localStorage.getItem('nyentrix_theme');
             if (savedTheme === 'dark') {
                 document.body.classList.add('dark-mode');
                 document.getElementById('themeIcon').innerText = '☀️';
                 document.getElementById('themeText').innerText = 'Light';
             }
-
-            // Muat Data Pertama Kali dari Cloud Supabase
-            await loadArmadaNames();
-            await fetchAllData();
-
-            // Aktifkan Real-Time Listener (Agar HP/Perangkat Lain Otomatis Terupdate)
-            setupRealtimeSubscriptions();
+            populateArmadaDropdowns();
+            renderLegend();
+            muatDataRealtime();
         });
 
-        // 1. FUNGSI LOAD DATA DARI SUPABASE
-        async function fetchAllData() {
-            // Ambil data orders
-            let { data: orderData, error: orderErr } = await db.from('orders').select('*').order('tanggal', { ascending: true });
-            if (!orderErr && orderData) {
-                orders = orderData.map(o => ({
-                    id: o.id,
-                    armadaIndex: o.armada_index,
-                    tanggal: o.tanggal,
-                    tujuan: o.tujuan,
-                    lokasi: o.lokasi,
-                    jam: o.jam,
-                    harga: o.harga,
-                    catatan: o.catatan
-                }));
-            }
-
-            // Ambil data foto
-            let { data: photoData, error: photoErr } = await db.from('photos').select('*').order('created_at', { ascending: false });
-            if (!photoErr && photoData) {
-                photos = photoData.map(p => ({
-                    id: p.id,
-                    armadaIndex: p.armada_index,
-                    url: p.url,
-                    keterangan: p.keterangan
-                }));
-            }
-
-            renderCalendar();
-            renderLegend();
-            populateArmadaDropdowns();
-            renderOrder();
-            renderGallery();
+        function showLoading(show) {
+            const loader = document.getElementById('loading-indicator');
+            if (show) loader.classList.remove('hidden');
+            else loader.classList.add('hidden');
         }
 
-        async function loadArmadaNames() {
-            let { data, error } = await db.from('armada_names').select('*').order('id', { ascending: true });
-            if (!error && data && data.length > 0) {
-                data.forEach(item => {
-                    armadaList[item.id] = item.name;
-                });
+        async function muatDataRealtime() {
+            showLoading(true);
+            try {
+                let response = await fetch(API_URL);
+                orders = await response.json();
+            } catch (err) {
+                console.error("Gagal memuat data dari database Google Sheets:", err);
+            } finally {
+                showLoading(false);
+                renderCalendar();
             }
         }
 
-        // 2. LISTEN REAL-TIME CHANGES (PENTING AGAR UPDATE REALTIME DI SEMUA USER)
-        function setupRealtimeSubscriptions() {
-            db.channel('public-changes')
-              .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => fetchAllData())
-              .on('postgres_changes', { event: '*', schema: 'public', table: 'armada_names' }, async () => {
-                  await loadArmadaNames();
-                  fetchAllData();
-              })
-              .on('postgres_changes', { event: '*', schema: 'public', table: 'photos' }, () => fetchAllData())
-              .subscribe();
-        }
-
-        // 3. FUNGSI SIMPAN & HAPUS JADWAL KE SUPABASE
-        async function simpanData() {
-            let armadaIndex = parseInt(document.getElementById('input-armada').value);
-            let tanggal = document.getElementById('input-tanggal').value;
-            let tujuan = document.getElementById('input-tujuan').value;
-
-            if(!tanggal || !tujuan) {
-                alert('Tanggal dan Tujuan wajib diisi!');
-                return;
-            }
-
-            const newOrder = {
-                armada_index: armadaIndex,
-                tanggal: tanggal,
-                tujuan: tujuan,
-                lokasi: document.getElementById('input-lokasi').value,
-                jam: document.getElementById('input-jam').value,
-                harga: document.getElementById('input-harga').value || 0,
-                catatan: document.getElementById('input-catatan').value
-            };
-
-            const { error } = await db.from('orders').insert([newOrder]);
-
-            if (error) {
-                alert('Gagal menyimpan jadwal: ' + error.message);
-            } else {
-                alert('Jadwal berhasil disimpan di Database!');
-                document.getElementById('input-tujuan').value = '';
-                document.getElementById('input-lokasi').value = '';
-                document.getElementById('input-harga').value = '';
-                document.getElementById('input-catatan').value = '';
-                switchTab('jadwal', document.querySelector('.card-menu-1'));
-            }
-        }
-
-        async function hapusOrder(id) {
-            if(!isAdmin) {
-                alert('Hanya Admin yang diizinkan untuk menghapus jadwal.');
-                return;
-            }
-            if(confirm('Yakin ingin menghapus jadwal ini?')) {
-                const { error } = await db.from('orders').delete().eq('id', id);
-                if(error) alert('Gagal menghapus: ' + error.message);
-            }
-        }
-
-        async function simpanNamaArmada() {
-            for(let i = 0; i < 4; i++) {
-                const val = document.getElementById(`rename-armada-${i}`).value.trim();
-                if(val) {
-                    await db.from('armada_names').upsert({ id: i, name: val });
-                }
-            }
-            alert('Nama armada berhasil diperbarui!');
-        }
-
-        async function uploadFoto() {
-            let fileInput = document.getElementById('input-file-foto');
-            let armadaIndex = parseInt(document.getElementById('foto-armada').value);
-            let ket = document.getElementById('ket-foto').value;
-
-            if(fileInput.files.length === 0) {
-                alert('Pilih foto terlebih dahulu!');
-                return;
-            }
-
-            let reader = new FileReader();
-            reader.onload = async function(e) {
-                const newPhoto = {
-                    armada_index: armadaIndex,
-                    url: e.target.result,
-                    keterangan: ket
-                };
-                const { error } = await db.from('photos').insert([newPhoto]);
-                if(error) {
-                    alert('Gagal unggah foto: ' + error.message);
-                } else {
-                    alert('Foto berhasil diunggah!');
-                    document.getElementById('ket-foto').value = '';
-                    fileInput.value = '';
-                }
-            }
-            reader.readAsDataURL(fileInput.files[0]);
-        }
-
-        // 4. UTILITY & UI RENDER FUNCTIONS
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
@@ -751,6 +653,18 @@
                 const inputRename = document.getElementById(`rename-armada-${i}`);
                 if(inputRename) inputRename.value = armadaList[i] || '';
             }
+        }
+
+        function simpanNamaArmada() {
+            for(let i = 0; i < 4; i++) {
+                const val = document.getElementById(`rename-armada-${i}`).value.trim();
+                if(val) armadaList[i] = val;
+            }
+            localStorage.setItem('nyentrix_armada_names', JSON.stringify(armadaList));
+            populateArmadaDropdowns();
+            renderCalendar();
+            renderLegend();
+            alert('Nama armada berhasil diperbarui!');
         }
 
         function renderLegend() {
@@ -880,6 +794,69 @@
             renderCalendar();
         }
 
+        async function simpanData() {
+            let newOrder = {
+                id: Date.now(),
+                armadaIndex: document.getElementById('input-armada').value,
+                tanggal: document.getElementById('input-tanggal').value,
+                tujuan: document.getElementById('input-tujuan').value,
+                lokasi: document.getElementById('input-lokasi').value,
+                jam: document.getElementById('input-jam').value,
+                harga: document.getElementById('input-harga').value,
+                catatan: document.getElementById('input-catatan').value
+            };
+
+            if(!newOrder.tanggal || !newOrder.tujuan) {
+                alert('Tanggal dan Tujuan wajib diisi!');
+                return;
+            }
+
+            showLoading(true);
+
+            try {
+                await fetch(API_URL, {
+                    method: "POST",
+                    body: JSON.stringify({ action: "ADD", data: newOrder })
+                });
+                await muatDataRealtime();
+                alert('Jadwal berhasil disimpan!');
+            } catch (e) {
+                alert("Gagal menyimpan ke database Google Sheets.");
+            } finally {
+                showLoading(false);
+            }
+            
+            document.getElementById('input-tujuan').value = '';
+            document.getElementById('input-lokasi').value = '';
+            document.getElementById('input-harga').value = '';
+            document.getElementById('input-catatan').value = '';
+            
+            const firstCard = document.querySelector('.card-menu-1');
+            switchTab('jadwal', firstCard);
+        }
+
+        async function hapusOrder(id) {
+            if(!isAdmin) {
+                alert('Hanya Admin yang diizinkan untuk menghapus jadwal.');
+                return;
+            }
+            if(confirm('Yakin ingin menghapus jadwal ini?')) {
+                showLoading(true);
+                try {
+                    await fetch(API_URL, {
+                        method: "POST",
+                        body: JSON.stringify({ action: "DELETE", id: id })
+                    });
+                    await muatDataRealtime();
+                    alert("Jadwal berhasil dihapus dari database.");
+                } catch (e) {
+                    alert("Gagal menghapus dari database.");
+                } finally {
+                    showLoading(false);
+                }
+            }
+        }
+
         function renderOrder() {
             let filter = document.getElementById('filter-armada').value;
             let container = document.getElementById('list-order-detail');
@@ -918,6 +895,33 @@
                 `;
                 container.appendChild(div);
             });
+        }
+
+        function uploadFoto() {
+            let fileInput = document.getElementById('input-file-foto');
+            let armadaIndex = document.getElementById('foto-armada').value;
+            let ket = document.getElementById('ket-foto').value;
+
+            if(fileInput.files.length === 0) {
+                alert('Pilih foto terlebih dahulu!');
+                return;
+            }
+
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let newPhoto = {
+                    armadaIndex: armadaIndex,
+                    url: e.target.result,
+                    keterangan: ket
+                };
+                photos.push(newPhoto);
+                localStorage.setItem('nyentrix_photos', JSON.stringify(photos));
+                alert('Foto berhasil diunggah!');
+                renderGallery();
+                document.getElementById('ket-foto').value = '';
+                fileInput.value = '';
+            }
+            reader.readAsDataURL(fileInput.files[0]);
         }
 
         function renderGallery() {
