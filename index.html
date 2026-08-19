@@ -199,7 +199,7 @@
         /* KOTAK KALENDER FIXED/SIMETRIS */
         .calendar-day-cell {
             background: var(--card);
-            height: 62px; /* Ketinggian seragam agar 1 bulan muat di HP */
+            height: 62px;
             padding: 2px;
             box-sizing: border-box;
             display: flex;
@@ -232,7 +232,7 @@
             line-height: 16px;
         }
 
-        /* WIDGET CHIP ARMADA LENGKAP WARNA & INISIAL */
+        /* WIDGET CHIP ARMADA LENGKAP WARNA BARU */
         .chips-wrapper {
             display: flex;
             flex-direction: column;
@@ -256,11 +256,15 @@
             line-height: 1.2;
         }
 
-        /* Warna Blok Sesuai Kode Warna Armada */
-        .event-chip.armada-0 { background-color: #d8b4fe; color: #4c1d95; } /* Ungu Muda */
-        .event-chip.armada-1 { background-color: #bbf7d0; color: #14532d; } /* Hijau Muda */
-        .event-chip.armada-2 { background-color: #fef08a; color: #713f12; } /* Kuning Muda */
-        .event-chip.armada-3 { background-color: #fecdd3; color: #881337; } /* Merah Muda */
+        /* DOKUMEN SESUAI PERMINTAAN WARNA */
+        /* Armada 0: Biru */
+        .event-chip.armada-0 { background-color: #2563eb; color: #ffffff; } 
+        /* Armada 1: Merah */
+        .event-chip.armada-1 { background-color: #dc2626; color: #ffffff; } 
+        /* Armada 2: Ungu */
+        .event-chip.armada-2 { background-color: #9333ea; color: #ffffff; } 
+        /* Armada 3: Hitam */
+        .event-chip.armada-3 { background-color: #0f172a; color: #ffffff; } 
 
         .badge-legend {
             display: inline-block;
@@ -270,10 +274,10 @@
             font-weight: 700;
         }
 
-        .badge-legend.armada-0 { background-color: #d8b4fe; color: #4c1d95; }
-        .badge-legend.armada-1 { background-color: #bbf7d0; color: #14532d; }
-        .badge-legend.armada-2 { background-color: #fef08a; color: #713f12; }
-        .badge-legend.armada-3 { background-color: #fecdd3; color: #881337; }
+        .badge-legend.armada-0 { background-color: #2563eb; color: #ffffff; }
+        .badge-legend.armada-1 { background-color: #dc2626; color: #ffffff; }
+        .badge-legend.armada-2 { background-color: #9333ea; color: #ffffff; }
+        .badge-legend.armada-3 { background-color: #0f172a; color: #ffffff; }
 
         input, select, textarea {
             width: 100%;
@@ -488,16 +492,16 @@
             <div id="form-custom-armada" class="card hidden">
                 <h3 style="margin-top:0; font-size:1rem;">⚙️ Pengaturan Nama Armada</h3>
                 <div style="display: flex; flex-direction: column; gap: 2px;">
-                    <label style="font-size:0.75rem;"><b>Armada 1 (Ungu):</b></label>
+                    <label style="font-size:0.75rem;"><b>Armada 1 (Biru):</b></label>
                     <input type="text" id="rename-armada-0">
 
-                    <label style="font-size:0.75rem;"><b>Armada 2 (Hijau):</b></label>
+                    <label style="font-size:0.75rem;"><b>Armada 2 (Merah):</b></label>
                     <input type="text" id="rename-armada-1">
 
-                    <label style="font-size:0.75rem;"><b>Armada 3 (Kuning):</b></label>
+                    <label style="font-size:0.75rem;"><b>Armada 3 (Ungu):</b></label>
                     <input type="text" id="rename-armada-2">
 
-                    <label style="font-size:0.75rem;"><b>Armada 4 (Merah Muda):</b></label>
+                    <label style="font-size:0.75rem;"><b>Armada 4 (Hitam):</b></label>
                     <input type="text" id="rename-armada-3">
 
                     <button class="btn" style="background:#059669; margin-top: 4px;" onclick="simpanNamaArmada()">Simpan Nama Armada</button>
@@ -703,7 +707,6 @@
             alert('Berhasil Logout.');
         }
 
-        // FUNGSI RENDER KALENDER RINGKAS DENGAN WIDGET RINGKAS
         function renderCalendar() {
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
@@ -753,7 +756,6 @@
                         let idx = parseInt(ord.armadaIndex) || 0;
                         let namaArmada = armadaList[idx] || `A${idx + 1}`;
                         
-                        // INISIAL SINGKAT UNTUK LAYAR PORTRAIT HP
                         let ringkasanTujuan = ord.tujuan ? ord.tujuan.substring(0, 5) : '';
                         let labelSingkat = `${namaArmada.substring(0, 3)} ${ringkasanTujuan}`;
 
