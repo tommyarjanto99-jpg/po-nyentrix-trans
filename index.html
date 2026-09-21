@@ -337,7 +337,7 @@
             border-radius: 10px;
         }
 
-        .hidden { display: none; }
+        .hidden { display: none !important; }
 
         .gallery-grid {
             display: grid;
@@ -358,6 +358,84 @@
             font-weight: 600;
             color: var(--primary);
             margin-bottom: 6px;
+        }
+
+        /* MODAL POPUP JADWAL BESAR */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(3px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+        .modal-content {
+            background: var(--card);
+            color: var(--text);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .close-modal-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 1rem;
+        }
+
+        .modal-detail-item {
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .modal-detail-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .modal-detail-item ul {
+            padding-left: 1.2rem;
+            margin: 0.5rem 0 0 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -478,7 +556,6 @@
                 <input type="text" id="input-lokasi" placeholder="Contoh: Garasi PO Nyentrix">
 
                 <label style="font-size:0.8rem;"><b>Jam Jemput:</b></label>
-                <!-- DIBUAT MANUAL BISA TEXT BIASA TERHINDAR DARI ERROR -->
                 <input type="text" id="input-jam" placeholder="Contoh: 07:00 WIB / Jam 7 Pagi">
 
                 <label style="font-size:0.8rem;"><b>Nilai Sewa (Rp):</b></label>
@@ -537,6 +614,19 @@
             </div>
         </div>
 
+    </div>
+
+    <!-- MODAL POPUP JADWAL -->
+    <div id="modalJadwal" class="modal-overlay hidden" onclick="closeModalOutside(event)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTanggalTitle">📅 Detail Jadwal</h3>
+                <button class="close-modal-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBodyContent">
+                <!-- Konten dinamis popup -->
+            </div>
+        </div>
     </div>
 
     <script>
@@ -767,17 +857,19 @@
                         
                         chip.onclick = (e) => {
                             e.stopPropagation();
-                            if (isAdmin && confirm(`Hapus jadwal ${namaArmada} (${ord.tujuan})?`)) {
-                                hapusOrder(ord.id);
-                            } else {
-                                alert(`🚌 ${namaArmada}\n📅 Tanggal: ${ord.tanggal}\n📍 Tujuan/Penyewa: ${ord.tujuan || '-'}\n🏣 Jemput: ${ord.lokasi || '-'}\n⏰ Jam: ${ord.jam || '-'}\n💰 Harga: Rp ${ord.harga ? Number(ord.harga).toLocaleString() : '0'}`);
-                            }
+                            showModalOrder(dayOrders, targetDateStr);
                         };
                         chipsWrapper.appendChild(chip);
                     });
 
                     cell.appendChild(chipsWrapper);
                 }
+
+                cell.onclick = () => {
+                    if (dayOrders.length > 0) {
+                        showModalOrder(dayOrders, targetDateStr);
+                    }
+                };
 
                 calendarBody.appendChild(cell);
             }
@@ -792,6 +884,59 @@
                     cell.innerHTML = `<span class="day-number">${j}</span>`;
                     calendarBody.appendChild(cell);
                 }
+            }
+        }
+
+        /* FUNGSI KELOLA MODAL POPUP */
+        function showModalOrder(listOrders, dateStr) {
+            let container = document.getElementById('modalBodyContent');
+            document.getElementById('modalTanggalTitle').innerText = `📅 Jadwal Tanggal: ${formatDateStandard(dateStr)}`;
+            container.innerHTML = '';
+
+            listOrders.forEach(ord => {
+                let idx = parseInt(ord.armadaIndex) || 0;
+                let namaArmada = armadaList[idx] || `Armada ${idx + 1}`;
+
+                let div = document.createElement('div');
+                div.className = 'modal-detail-item';
+
+                let deleteBtnHtml = isAdmin 
+                    ? `<button class="btn-delete" style="width:100%; margin-top:10px;" onclick="hapusOrderModal(${ord.id})">🗑️ Hapus Jadwal Ini</button>` 
+                    : '';
+
+                div.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="badge-legend armada-${idx % 4}" style="font-size:0.85rem; padding: 4px 8px;">🚌 ${namaArmada}</span>
+                    </div>
+                    <ul>
+                        <li><b>Tujuan / Penyewa:</b> ${ord.tujuan || '-'}</li>
+                        <li><b>Lokasi Jemput:</b> ${ord.lokasi || '-'}</li>
+                        <li><b>Jam Jemput:</b> ${ord.jam || '-'}</li>
+                        <li><b>Nilai Sewa:</b> Rp ${ord.harga ? Number(ord.harga).toLocaleString() : '0'}</li>
+                        <li><b>Catatan:</b> ${ord.catatan || '-'}</li>
+                    </ul>
+                    ${deleteBtnHtml}
+                `;
+                container.appendChild(div);
+            });
+
+            document.getElementById('modalJadwal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modalJadwal').classList.add('hidden');
+        }
+
+        function closeModalOutside(event) {
+            if (event.target.id === 'modalJadwal') {
+                closeModal();
+            }
+        }
+
+        async function hapusOrderModal(id) {
+            if (confirm("Apakah Anda yakin ingin menghapus jadwal ini?")) {
+                closeModal();
+                await hapusOrder(id);
             }
         }
 
@@ -869,7 +1014,10 @@
             let container = document.getElementById('list-order-detail');
             container.innerHTML = '';
 
-            let filtered = filter === 'semua' ? orders : orders.filter(o => parseInt(o.armadaIndex) == filter);
+            let filtered = filter === 'semua' ? [...orders] : orders.filter(o => parseInt(o.armadaIndex) == filter);
+
+            // Pengurutan berdasarkan tanggal terbaru di atas
+            filtered.sort((a, b) => new Date(formatDateStandard(b.tanggal)) - new Date(formatDateStandard(a.tanggal)));
 
             if(filtered.length === 0) {
                 container.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">Tidak ada detail order untuk armada ini.</p>';
