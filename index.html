@@ -257,13 +257,9 @@
         }
 
         /* DOKUMEN SESUAI PERMINTAAN WARNA */
-        /* Armada 0: Biru */
         .event-chip.armada-0 { background-color: #2563eb; color: #ffffff; } 
-        /* Armada 1: Merah */
         .event-chip.armada-1 { background-color: #dc2626; color: #ffffff; } 
-        /* Armada 2: Ungu */
         .event-chip.armada-2 { background-color: #9333ea; color: #ffffff; } 
-        /* Armada 3: Hitam */
         .event-chip.armada-3 { background-color: #0f172a; color: #ffffff; } 
 
         .badge-legend {
@@ -440,6 +436,23 @@
     </style>
 </head>
 <body>
+
+    <!-- MODAL LOGIN USER (MUNCUL JIKA BELUM PERNAH MASUK DI PERANGKAT INI) -->
+    <div id="userLoginModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 380px; text-align: center;">
+            <div class="modal-header" style="justify-content: center;">
+                <h3>🔒 Masukkan Password User</h3>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0;">Silakan masukkan password akses untuk melihat jadwal PO Nyentrix Trans.</p>
+                <div class="password-wrapper" style="margin-bottom: 1rem;">
+                    <input type="password" id="user-access-pass" placeholder="Password User...">
+                    <button type="button" class="toggle-pwd-btn" onclick="toggleUserPasswordVisibility()">👁️</button>
+                </div>
+                <button class="btn" onclick="verifyUserPassword()">Masuk</button>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
 
@@ -632,6 +645,9 @@
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwqBTGPdtUMp7RTOu5V31E8IuD2rt8bbtqFAUFsyj2v3RW5tFCals6-NFBZqNYyG1QY/exec";
 
+        // Password User (silakan ganti sesuai keinginan)
+        const USER_PASSWORD = "user123";
+
         const defaultArmadaNames = ["Thunayiya", "relasi", "Attilaboy", "Nawasena"];
         let armadaList = JSON.parse(localStorage.getItem('nyentrix_armada_names')) || defaultArmadaNames;
         let orders = [];
@@ -640,6 +656,12 @@
         let currentDate = new Date();
 
         document.addEventListener("DOMContentLoaded", () => {
+            // Cek apakah perangkat sudah pernah memasukkan password user sebelumnya
+            const isUserAuth = localStorage.getItem('nyentrix_user_auth');
+            if (isUserAuth === 'true') {
+                document.getElementById('userLoginModal').classList.add('hidden');
+            }
+
             const savedTheme = localStorage.getItem('nyentrix_theme');
             if (savedTheme === 'dark') {
                 document.body.classList.add('dark-mode');
@@ -650,6 +672,29 @@
             renderLegend();
             muatDataRealtime();
         });
+
+        function toggleUserPasswordVisibility() {
+            const passInput = document.getElementById('user-access-pass');
+            const toggleBtn = document.querySelectorAll('.toggle-pwd-btn')[0];
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                toggleBtn.innerText = '🙈';
+            } else {
+                passInput.type = 'password';
+                toggleBtn.innerText = '👁️';
+            }
+        }
+
+        function verifyUserPassword() {
+            const inputPass = document.getElementById('user-access-pass').value;
+            if (inputPass === USER_PASSWORD) {
+                // Simpan ke localStorage agar perangkat ini tidak perlu memasukkan password lagi di masa mendatang
+                localStorage.setItem('nyentrix_user_auth', 'true');
+                document.getElementById('userLoginModal').classList.add('hidden');
+            } else {
+                alert('Password User salah! Silakan coba lagi.');
+            }
+        }
 
         function showLoading(show) {
             const loader = document.getElementById('loading-indicator');
@@ -696,7 +741,8 @@
 
         function togglePasswordVisibility() {
             const passInput = document.getElementById('admin-pass');
-            const toggleBtn = document.querySelector('.toggle-pwd-btn');
+            const toggleBtns = document.querySelectorAll('.toggle-pwd-btn');
+            const toggleBtn = toggleBtns[toggleBtns.length - 1]; // Tombol admin
             if (passInput.type === 'password') {
                 passInput.type = 'text';
                 toggleBtn.innerText = '🙈';
@@ -812,7 +858,6 @@
             const calendarBody = document.getElementById('calendar-body');
             calendarBody.innerHTML = '';
 
-            // Hari bulan lalu
             for (let i = firstDay - 1; i >= 0; i--) {
                 let cell = document.createElement('div');
                 cell.className = 'calendar-day-cell other-month';
@@ -820,7 +865,6 @@
                 calendarBody.appendChild(cell);
             }
 
-            // Hari bulan ini
             const today = new Date();
             for (let day = 1; day <= daysInMonth; day++) {
                 let cell = document.createElement('div');
@@ -874,7 +918,6 @@
                 calendarBody.appendChild(cell);
             }
 
-            // Hari bulan depan
             let totalCells = firstDay + daysInMonth;
             let nextDays = 7 - (totalCells % 7);
             if (nextDays < 7) {
@@ -887,7 +930,6 @@
             }
         }
 
-        /* FUNGSI KELOLA MODAL POPUP */
         function showModalOrder(listOrders, dateStr) {
             let container = document.getElementById('modalBodyContent');
             document.getElementById('modalTanggalTitle').innerText = `📅 Jadwal Tanggal: ${formatDateStandard(dateStr)}`;
@@ -1016,7 +1058,6 @@
 
             let filtered = filter === 'semua' ? [...orders] : orders.filter(o => parseInt(o.armadaIndex) == filter);
 
-            // Pengurutan berdasarkan tanggal terbaru di atas
             filtered.sort((a, b) => new Date(formatDateStandard(b.tanggal)) - new Date(formatDateStandard(a.tanggal)));
 
             if(filtered.length === 0) {
